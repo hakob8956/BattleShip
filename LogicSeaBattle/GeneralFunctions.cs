@@ -8,9 +8,9 @@ namespace GameCore
     public class GeneralFunctions
     {
         Field field;
-        public GeneralFunctions()
+        public GeneralFunctions(Field _field)
         {
-            field = new Field();
+            field = _field;
         }
 
         public void Shoot(int x,int y)

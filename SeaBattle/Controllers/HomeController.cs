@@ -10,9 +10,14 @@ namespace SeaBattle.Controllers
 {
     public class HomeController : Controller
     {
+        MainFunctionsGame FunctionsGame = new MainFunctionsGame();
         public IActionResult Index()
         {
-            return View();
+            FunctionsGame.fieldPlayer.ClearField();
+            FunctionsGame.fieldPlayer.SetRandomShips();
+            FunctionsGame.fieldViewEnemy.ClearField();
+            FunctionsGame.fieldViewEnemy.SetRandomShips();
+            return View(FunctionsGame);
         }
 
     }
