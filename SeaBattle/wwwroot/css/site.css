@@ -26,4 +26,5 @@ table {
 }
 .battlefield-cell__busy {
     border: 2px solid #3243B2;
+    background-color: #dcdcdc;
 }

@@ -1,0 +1,25 @@
+{
+  "name": "SeaBattle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@aspnet/signalr": "^1.1.2",
+    "jquery": "^3.3.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hakob8956/SeaBattle.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hakob8956/SeaBattle/issues"
+  },
+  "homepage": "https://github.com/hakob8956/SeaBattle#readme"
+}

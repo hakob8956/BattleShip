@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.SignalR;
 
 namespace SeaBattle
 {
@@ -22,7 +23,7 @@ namespace SeaBattle
 
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddSignalR();
             services.AddMvc();
         }
 
@@ -40,6 +41,10 @@ namespace SeaBattle
 
             app.UseStaticFiles();
 
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<MainHub>("/seabattle");
+            });
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

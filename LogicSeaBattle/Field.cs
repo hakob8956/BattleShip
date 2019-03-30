@@ -3,38 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
 namespace GameCore
 {
     public class Field
     {
         public static int Size { get; } = 10;
         private int[,] plans = new int[Size, Size];
+        public struct TestPoint
+        {
+            public int x { get; set; }
+            public int y { get; set; }
+
+        }
         public int[,] Plans
         {//check for  sec.
             get { return plans; }
             set { plans = value; }
         }
+
         public Field()
         {
             plans = new int[Size, Size];
         }
+
         public void SetRandomShips()
         {
             //1->4
             //2->3     //4+6+6+4=20
             //3->2
             //4->1
-            int[] array = new int[3];//{1,2,3,4}
+            int[] array = { 1, 2, 3, 4 };
             Random random = new Random();
-
-            int count = 0;
-
-            //for one more for accept 20 ships(100%)
-            //Afraid Deadlock
-            //while (CountAllShips() != 20)
-            //{
-            //    ClearField();
-            for (int j = 1; j <= array.Length; j++) { array[j] = j; }//Init Array
 
             for (int i = 0; i < array.Length; i++)
             {
@@ -43,24 +43,14 @@ namespace GameCore
                     int x = random.Next(0, 9);
                     int y = random.Next(0, 9);
                     int or = random.Next(0, 1);
-                    if (SetOneShip(x, y, array.Length - i, or))
+                    if (SetShip(array.Length - i, or, x, y))
                     {
-                        count++;
                         array[i]--;
-
                     }
-
                 }
-                Console.WriteLine(count);
-                //count = 0;
             }
-
-            //            }
-
-
-
         }
-        private int CountAllShips()
+        public int CountAllShips()
         {
             int count = 0;
             for (int i = 0; i < Size; i++)
@@ -76,92 +66,7 @@ namespace GameCore
             return count;
 
         }
-        public bool SetOneShip(int x, int y, int ShipType, int orentation = (int)Orentation.Horizontal)
-        {
-            if (!CheckLocation(x, y))//Check Loacation x and y,if out array return false
-                return false;
-            int xx = x, yy = y;
-            if (orentation == (int)(Orentation.Vertical))
-            {
-                bool up = true, down = true;
-                int moveUp = 0, moveDown = 0;
-                if (yy - ShipType < 0)
-                    up = false;
-                if (yy + ShipType > Size)
-                    down = false;
-                //Vertical Rigth Or Up
 
-                for (int i = 0; i < ShipType; i++)
-                {
-                    moveUp = yy - i;
-                    moveDown = yy + i;
-                    if (up == true && plans[moveUp, xx] != (int)FieldType.Empty)
-                        up = false;
-
-                    if (down == true && plans[moveDown, xx] != (int)FieldType.Empty)
-                        down = false;
-
-                }
-                if (up)
-                {
-                    for (int i = 0; i < ShipType; i++)
-                    {
-
-                        plans[yy - i, xx] = (int)FieldType.Used;
-                    }
-                }
-                else if (down)
-                {
-                    for (int j = 0; j < ShipType; j++)
-                    {
-                        plans[yy + j, yy] = (int)FieldType.Used;
-                    }
-                }
-                return up || down;
-
-
-            }
-            else if (orentation == (int)Orentation.Horizontal)
-            {
-
-                bool right = true, left = true;
-                if (xx + ShipType > Size)
-                    right = false;
-                if (xx - ShipType < 0)
-                    left = false;
-
-                int moveRigth = 0, moveLeft = 0;
-                //Horizontal Up Or Down
-                for (int j = 0; j < ShipType; j++)
-                {
-                    moveRigth = xx + j;
-                    moveLeft = xx - j;
-
-                    if (right == true && plans[yy, moveRigth] != (int)FieldType.Empty)
-                        right = false;
-
-                    if (left == true && plans[yy, moveLeft] != (int)FieldType.Empty)
-                        left = false;
-                }
-                if (right)
-                {
-                    for (int i = 0; i < ShipType; i++)
-                    {
-                        plans[yy, xx + i] = (int)FieldType.Used;
-                    }
-                }
-                else if (left)
-                {
-                    for (int j = 0; j < ShipType; j++)
-                    {
-                        plans[yy, xx - j] = (int)FieldType.Used;
-                    }
-                }
-                return right || left;
-            }
-
-            return false;
-        }
         public bool CheckLocation(int x, int y)
         {
             if (!(x >= 0 && y >= 0 && x < Size && y < Size))
@@ -171,14 +76,84 @@ namespace GameCore
                 return true;
 
         }
-        //public void SetNeutralZone(int x,int y)
-        //{
-        //    if (true)
-        //    {
+        TestPoint[] TestSetShip(int shipType, int orentation, int x, int y)
+        {
+            if (TestCanSetShip(x, y))
+            {
+                TestPoint[] testPoint = new TestPoint[shipType];
+                switch (orentation)
+                {
+                    case (int)Orentation.Vertical:
+                        testPoint = TestSetShipDir(shipType, 1, 0, x, y);
+                        if (testPoint == null) testPoint = TestSetShipDir(shipType, -1, 0, x, y);
+                        break;
+                    case (int)Orentation.Horizontal:
+                        testPoint = TestSetShipDir(shipType, 0, 1, x, y);
+                        if (testPoint == null) testPoint = TestSetShipDir(shipType, 0, -1, x, y);
+                        break;
+                }
+                return testPoint;
 
-        //    }
+            }
+            return null;
+        }
+        public bool SetShip(int shipType, int orentation, int x, int y)
+        {
+            TestPoint[] points = TestSetShip(shipType, orentation, x, y);
+            if (points != null)
+            {
+                foreach (var point in points)
+                {
+                    plans[point.x, point.y] = (int)FieldType.Used;
+                }
+                return true;
+            }
+            return false;
 
-        //}
+        }
+        public TestPoint[] TestSetShipDir(int shipType, int XD, int YD, int x, int y)
+        {
+            TestPoint[] testPoint = new TestPoint[shipType];
+            for (int i = 0; i < shipType; i++)
+            {
+                if (TestCanSetShip(x, y))
+                {
+                    testPoint[i].x = x;
+                    testPoint[i].y = y;
+
+                }
+                else
+                    return null;
+                x += XD;
+                y += YD;
+            }
+            return testPoint;
+        }
+        public bool TestCanSetShip(int x, int y)
+        {
+            if (CheckLocation(x, y))
+            {
+                int[] xx = new int[9], yy = new int[9];
+                xx[0] = x + 1; yy[0] = y + 1;
+                xx[1] = x; yy[1] = y + 1;
+                xx[2] = x + 1; yy[2] = y + 1;
+                xx[3] = x + 1; yy[3] = y;
+                xx[4] = x; yy[4] = y;
+                xx[5] = x - 1; yy[5] = y;
+                xx[6] = x + 1; yy[6] = y - 1;
+                xx[7] = x; yy[7] = y - 1;
+                xx[8] = x - 1; yy[8] = y - 1;
+                for (int i = 0; i < 9; i++)
+                {
+                    if (CheckLocation(xx[i],yy[i]))
+                    {
+                        if (plans[xx[i], yy[i]] != (int)FieldType.Empty) return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
         public void ClearField()
         {
             for (int i = 0; i < Size; i++)

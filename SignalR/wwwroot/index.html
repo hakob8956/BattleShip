@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>SignalR Chat</title>
+</head>
+<body>
+    <div id="inputForm">
+        <input type="text" name="items" /><br /><br />
+        <input type="text" name="items" /><br /><br />
+        <input type="text" name="items" /><br /><br />
+        <input type="button" id="sendBtn" value="Отправить" />
+    </div>
+    <div><p id="response"></p></div>
+    <div id="not"></div>
+    <script src="signalr.min.js"></script>
+    <script>
+        let hubUrl = "/chat";
+        const hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl(hubUrl)
+            .build();
+
+        // получение сообщения от сервера
+        hubConnection.on("Receive", function (data) {
+
+            document.getElementById("response").innerHTML = "";
+            for (let i = 0; i < data.length; i++) {
+                
+                document.getElementById("response").innerHTML += "<p>" + data[i] + "</p>";
+            }
+        });
+        hubConnection.on("Notify", function (message) {
+            console.log(message);
+            document.getElementsById("not").innerHTML += "<p>" + message + "</p>";
+        });
+
+        // отправка сообщения на сервер
+        document.getElementById("sendBtn").addEventListener("click", function (e) {
+
+            const itemElems = document.getElementsByName("items");
+            let items = [];
+            for (let i = 0; i < itemElems.length; i++) {
+                items.push(itemElems[i].value);
+                itemElems[i].value = "";
+            }
+            hubConnection.invoke("Send", items);
+        });
+
+        hubConnection.start();
+    </script>
+</body>
+</html>
