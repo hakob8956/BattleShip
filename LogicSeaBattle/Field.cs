@@ -17,7 +17,7 @@ namespace GameCore
 
         }
         public int[,] Plans
-        {//check for  sec.
+        {
             get { return plans; }
             set { plans = value; }
         }
@@ -25,27 +25,28 @@ namespace GameCore
         public Field()
         {
             plans = new int[Size, Size];
+            ClearField();
         }
 
         public void SetRandomShips()
         {
             //1->4
-            //2->3     //4+6+6+4=20
+            //2->3     //4+6+6+4=20-->Count Ships
             //3->2
             //4->1
-            int[] array = { 1, 2, 3, 4 };
+            int[] ships = { 1, 2, 3, 4 };
             Random random = new Random();
 
-            for (int i = 0; i < array.Length; i++)
+            for (int i = 0; i < ships.Length; i++)
             {
-                while (array[i] != 0)
+                while (ships[i] != 0)
                 {
-                    int x = random.Next(0, 9);
-                    int y = random.Next(0, 9);
-                    int or = random.Next(0, 1);
-                    if (SetShip(array.Length - i, or, x, y))
+                    int x = random.Next(0, 10);
+                    int y = random.Next(0, 10);
+                    int dir = random.Next(0, 2);//vertical(0) or horizontal(1);
+                    if (SetShip(ships.Length - i, dir, x, y))
                     {
-                        array[i]--;
+                        ships[i]--;
                     }
                 }
             }
@@ -58,15 +59,12 @@ namespace GameCore
                 for (int j = 0; j < Size; j++)
                 {
                     if (plans[i, j] == (int)FieldType.Used)
-                    {
                         count++;
-                    }
                 }
             }
             return count;
 
         }
-
         public bool CheckLocation(int x, int y)
         {
             if (!(x >= 0 && y >= 0 && x < Size && y < Size))
@@ -136,7 +134,7 @@ namespace GameCore
                 int[] xx = new int[9], yy = new int[9];
                 xx[0] = x + 1; yy[0] = y + 1;
                 xx[1] = x; yy[1] = y + 1;
-                xx[2] = x + 1; yy[2] = y + 1;
+                xx[2] = x - 1; yy[2] = y + 1;
                 xx[3] = x + 1; yy[3] = y;
                 xx[4] = x; yy[4] = y;
                 xx[5] = x - 1; yy[5] = y;

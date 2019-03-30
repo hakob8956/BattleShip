@@ -15,8 +15,10 @@ namespace SeaBattle.Controllers
         {
             FunctionsGame.fieldPlayer.ClearField();
             FunctionsGame.fieldPlayer.SetRandomShips();
+
             FunctionsGame.fieldViewEnemy.ClearField();
             FunctionsGame.fieldViewEnemy.SetRandomShips();
+
             return View(FunctionsGame);
         }
 

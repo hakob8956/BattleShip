@@ -11,7 +11,7 @@
     <div class="container" style="margin-top:50px">
         <div class="row">
             <div class="col-lg-4">
-                <table class="battlefield-table" >
+                <table class="battlefield-table">
                     <tbody>
 
                         @for (int i = 0; i < GameCore.Field.Size; i++)
@@ -48,7 +48,7 @@
                 <p style="text-align:center;font-size:20px;font-family:fantasy">Player 1 vs Player 2</p>
             </div>
             <div class="col-lg-4">
-                <table class="battlefield-table" >
+                <table class="battlefield-table">
                     <tbody>
 
                         @for (int i = 0; i < GameCore.Field.Size; i++)
@@ -56,14 +56,14 @@
                             <tr class="battlefield-row">
                                 @for (int j = 0; j < GameCore.Field.Size; j++)
                                 {
-                                    if (Model.fieldViewEnemy.Plans[i, j] == 0)
+                                    if (Model.fieldViewEnemy.Plans[i, j] == 1)
                                     {
-                                        <td class="battlefield-cell battlefield-cell__empty">
+                                        <td class="battlefield-cell battlefield-cell__busy">@* __empty *@
 
                                             <div class="battlefield-cell-content" data-y="@i" data-x="@j"></div>
                                         </td>
                                     }
-                                    else if (Model.fieldViewEnemy.Plans[i, j] == 1)
+                                    else if (Model.fieldViewEnemy.Plans[i, j] == 0)
                                     {
                                         <td class="battlefield-cell battlefield-cell__empty" style="color:red">
 
@@ -84,13 +84,15 @@
         </div>
     </div>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
-        var x = $('.battlefield-cell-content').data('y');
-        if (x) {
+        //Connect hub (SIGNALR Core....)
 
-        }
-
+        $("tr.battlefield-row td.battlefield-cell").click(function (e) {
+            $(this).css("background-color", "green");
+            console.log("td");
+            e.stopPropagation();
+        });
     </script>
 </body>
 </html>

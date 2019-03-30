@@ -7,10 +7,8 @@ namespace TestGame
     {
         static void Main(string[] args)
         {
-
             Field field = new Field();
             GeneralFunctions functions = new GeneralFunctions(field);
-
             field.SetRandomShips();
             field.Display();
             Console.WriteLine(field.CountAllShips());

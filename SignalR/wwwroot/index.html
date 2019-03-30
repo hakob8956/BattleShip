@@ -20,7 +20,6 @@
             .withUrl(hubUrl)
             .build();
 
-        // получение сообщения от сервера
         hubConnection.on("Receive", function (data) {
 
             document.getElementById("response").innerHTML = "";
@@ -34,7 +33,7 @@
             document.getElementsById("not").innerHTML += "<p>" + message + "</p>";
         });
 
-        // отправка сообщения на сервер
+
         document.getElementById("sendBtn").addEventListener("click", function (e) {
 
             const itemElems = document.getElementsByName("items");

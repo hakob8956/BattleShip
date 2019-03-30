@@ -16,6 +16,7 @@ namespace SeaBattle.Models
         {
             fieldPlayer = new Field();
             functionsPlayer = new GeneralFunctions(fieldPlayer);
+
             fieldViewEnemy = new Field();
             functionViewEnemy = new GeneralFunctions(fieldViewEnemy);
 
