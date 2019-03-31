@@ -9,17 +9,31 @@ namespace SignalR
 {
     public class ChatHub:Hub
     {
-    
-        public override async Task OnDisconnectedAsync(Exception exception)
+
+        //string groupname = "cats";
+        public async Task Enter(string connectionId = null)
         {
-            await Clients.All.SendAsync("Notify", $"{Context.ConnectionId} Exit in chat");
-            await base.OnDisconnectedAsync(exception);
+            if (String.IsNullOrEmpty(connectionId))
+            {
+                Random rnd = new Random();
+                connectionId = Convert.ToString(rnd.Next(10000000, 99999999));
+                await Groups.AddToGroupAsync(Context.ConnectionId, connectionId);
+                await Clients.Group(connectionId).SendAsync("Notify", $"{connectionId} вошел в чат");
+                await Clients.Group(connectionId).SendAsync("GetConnectionID", connectionId);
+
+            }
+            else
+            {
+         
+                await Groups.AddToGroupAsync(Context.ConnectionId, connectionId);
+                await Clients.Group(connectionId).SendAsync("Notify", $"{connectionId} вошел в чат");
+            }
         }
 
-        public async Task Send(List<string> items)
+        public async Task Send(string message, string username,string connectionID)
         {
-
-            await Clients.Caller.SendAsync("Receive", items);
+           
+            await Clients.Group(Context.ConnectionId).SendAsync(username, message);
         }
 
 

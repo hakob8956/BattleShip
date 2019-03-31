@@ -1,4 +1,4 @@
-﻿@model MainFunctionsGame
+﻿@model DateViewModel
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,29 +19,24 @@
                             <tr class="battlefield-row">
                                 @for (int j = 0; j < GameCore.Field.Size; j++)
                                 {
-                                    if (Model.fieldPlayer.Plans[i, j] == 0)
+                                    if (Model.FunctionsGame.fieldPlayer.Plans[i, j] == 0)
                                     {
                                         <td class="battlefield-cell battlefield-cell__empty">
-
                                             <div class="battlefield-cell-content" data-y="@i" data-x="@j"></div>
                                         </td>
                                     }
-                                    else if (Model.fieldPlayer.Plans[i, j] == 1)
+                                    else if (Model.FunctionsGame.fieldPlayer.Plans[i, j] == 1)
                                     {
                                         <td class="battlefield-cell battlefield-cell__busy">
-
                                             <div class="battlefield-cell-content" data-y="@i" data-x="@j">
-
                                             </div>
                                         </td>
                                     }
-
                                 }
                             </tr>
                         }
 
                     </tbody>
-
                 </table>
             </div>
             <div class="col-lg-4" style="display:inline-block">
@@ -50,25 +45,21 @@
             <div class="col-lg-4">
                 <table class="battlefield-table">
                     <tbody>
-
                         @for (int i = 0; i < GameCore.Field.Size; i++)
                         {
                             <tr class="battlefield-row">
                                 @for (int j = 0; j < GameCore.Field.Size; j++)
                                 {
-                                    if (Model.fieldViewEnemy.Plans[i, j] == 1)
+                                    if (Model.FunctionsGame.fieldViewEnemy.Plans[i, j] == 1)
                                     {
-                                        <td class="battlefield-cell battlefield-cell__busy">@* __empty *@
-
+                                        <td class="battlefield-cell battlefield-cell__busy">
                                             <div class="battlefield-cell-content" data-y="@i" data-x="@j"></div>
                                         </td>
                                     }
-                                    else if (Model.fieldViewEnemy.Plans[i, j] == 0)
+                                    else if (Model.FunctionsGame.fieldViewEnemy.Plans[i, j] == 0)
                                     {
                                         <td class="battlefield-cell battlefield-cell__empty" style="color:red">
-
                                             <div class="battlefield-cell-content" data-y="@i" data-x="@j">
-
                                             </div>
                                         </td>
                                     }
@@ -81,18 +72,51 @@
 
                 </table>
             </div>
+
         </div>
+        <div id="loginBlock">
+            Ввойти в чат:<br />
+            <input id="loginBtn" type="button" value="Войти" />
+        </div><br />
+        <div id="chatroom"></div>
+
     </div>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/signalr/signalr.min.js"></script>
     <script>
-        //Connect hub (SIGNALR Core....)
+    //Connect hub (SIGNALR Core....)
+        function changeurl(connectionID) {
+            var new_url = "https://localhost:44392/?id=" + connectionID;
+            window.history.pushState("data", "Title", new_url);
+        }
+        const hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl("/seabattle")
+            .build();
+        // диагностическое сообщение
+        hubConnection.on("Notify", function (message) {
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode(message));
 
-        $("tr.battlefield-row td.battlefield-cell").click(function (e) {
-            $(this).css("background-color", "green");
-            console.log("td");
-            e.stopPropagation();
+            var firstElem = document.getElementById("chatroom").firstChild;
+            document.getElementById("chatroom").insertBefore(elem, firstElem);
         });
+        // установка имени пользователя
+        document.getElementById("loginBtn").addEventListener("click", function (e) {
+            hubConnection.invoke("Enter", "");
+        });
+        hubConnection.on("GetConnectionID", function (connectionID) {
+            console.log("ID: " + connectionID);
+            changeurl(connectionID);
+        });
+
+        hubConnection.start();
+
+        window.onload = function() {
+            var _CurrentConnectionID = @Model.ConnectionID;
+            console.log("ID:="+_CurrentConnectionID);
+            if (_CurrentConnectionID != null) hubConnection.invoke("Enter", @Model.ConnectionID);
+        };
     </script>
 </body>
 </html>

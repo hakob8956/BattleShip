@@ -5,44 +5,72 @@
     <title>SignalR Chat</title>
 </head>
 <body>
+    <div id="loginBlock">
+        Ввойти в чат:<br />
+        <input id="loginBtn" type="button" value="Войти" />
+    </div><br />
+
+    <div id="header"></div><br />
+
     <div id="inputForm">
-        <input type="text" name="items" /><br /><br />
-        <input type="text" name="items" /><br /><br />
-        <input type="text" name="items" /><br /><br />
+        <input type="text" id="message" />
         <input type="button" id="sendBtn" value="Отправить" />
     </div>
-    <div><p id="response"></p></div>
-    <div id="not"></div>
+    <div id="chatroom"></div>
+
     <script src="signalr.min.js"></script>
     <script>
-        let hubUrl = "/chat";
+        function changeurl(connectionID) {
+            var new_url = "https://localhost:44333/id" + connectionID;
+            window.history.pushState("data", "Title", new_url);
+
+
+        }
         const hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl(hubUrl)
+            .withUrl("/chat")
             .build();
+        let userName = "";
+        // получение сообщения от сервера
+        hubConnection.on("Receive", function (message, userName, connectionID) {
 
-        hubConnection.on("Receive", function (data) {
+            // создаем элемент <b> для имени пользователя
+            let userNameElem = document.createElement("b");
+            userNameElem.appendChild(document.createTextNode(userName + ": "));
 
-            document.getElementById("response").innerHTML = "";
-            for (let i = 0; i < data.length; i++) {
-                
-                document.getElementById("response").innerHTML += "<p>" + data[i] + "</p>";
-            }
+            // создает элемент <p> для сообщения пользователя
+            let elem = document.createElement("p");
+            elem.appendChild(userNameElem);
+            elem.appendChild(document.createTextNode(message));
+
+            var firstElem = document.getElementById("chatroom").firstChild;
+            document.getElementById("chatroom").insertBefore(elem, firstElem);
+
         });
+
+        // диагностическое сообщение
         hubConnection.on("Notify", function (message) {
-            console.log(message);
-            document.getElementsById("not").innerHTML += "<p>" + message + "</p>";
+
+            let elem = document.createElement("p");
+            elem.appendChild(document.createTextNode(message));
+
+            var firstElem = document.getElementById("chatroom").firstChild;
+            document.getElementById("chatroom").insertBefore(elem, firstElem);
         });
 
+        // установка имени пользователя
+        document.getElementById("loginBtn").addEventListener("click", function (e) {
+            hubConnection.invoke("Enter","");
 
+        });
+        hubConnection.on("GetConnectionID", function (connectionID) {
+            console.log("ID: " + connectionID);
+            changeurl(connectionID);
+        });
+        // отправка сообщения на сервер
         document.getElementById("sendBtn").addEventListener("click", function (e) {
+            let message = document.getElementById("message").value;
 
-            const itemElems = document.getElementsByName("items");
-            let items = [];
-            for (let i = 0; i < itemElems.length; i++) {
-                items.push(itemElems[i].value);
-                itemElems[i].value = "";
-            }
-            hubConnection.invoke("Send", items);
+            hubConnection.invoke("Send", message, userName);
         });
 
         hubConnection.start();
