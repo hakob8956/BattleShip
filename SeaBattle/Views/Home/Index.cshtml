@@ -10,75 +10,77 @@
 <body>
     <div class="container" style="margin-top:50px">
         <div class="row">
-            <div class="col-lg-4">
-                <table class="battlefield-table">
-                    <tbody>
+            <div class="col-lg-5 battlefield battlefield__self">
+                <div class="battlefield-gap">
+                    <table class="battlefield-table" style="margin-left:105px;float:left">
+                        <tbody>
 
-                        @for (int i = 0; i < GameCore.Field.Size; i++)
-                        {
-                            <tr class="battlefield-row">
-                                @for (int j = 0; j < GameCore.Field.Size; j++)
-                                {
-                                    if (Model.FunctionsGame.fieldPlayer.Plans[i, j] == 0)
+                            @for (int i = 0; i < GameCore.Field.Size; i++)
+                            {
+                                <tr class="battlefield-row">
+                                    @for (int j = 0; j < GameCore.Field.Size; j++)
                                     {
-                                        <td class="battlefield-cell battlefield-cell__empty">
-                                            <div class="battlefield-cell-content" data-y="@i" data-x="@j"></div>
-                                        </td>
+                                        if (Model.FunctionsGame.fieldPlayer.Plans[i, j] == 0)
+                                        {
+                                            <td class="battlefield-cell battlefield-cell__empty">
+                                                <div class="battlefield-cell-content" data-y="@i" data-x="@j"></div>
+                                            </td>
+                                        }
+                                        else if (Model.FunctionsGame.fieldPlayer.Plans[i, j] == 1)
+                                        {
+                                            <td class="battlefield-cell battlefield-cell__busy">
+                                                <div class="battlefield-cell-content" data-y="@i" data-x="@j">
+                                                </div>
+                                            </td>
+                                        }
                                     }
-                                    else if (Model.FunctionsGame.fieldPlayer.Plans[i, j] == 1)
-                                    {
-                                        <td class="battlefield-cell battlefield-cell__busy">
-                                            <div class="battlefield-cell-content" data-y="@i" data-x="@j">
-                                            </div>
-                                        </td>
-                                    }
-                                }
-                            </tr>
-                        }
+                                </tr>
+                            }
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="col-lg-4" style="display:inline-block">
-                <p style="text-align:center;font-size:20px;font-family:fantasy">Player 1 vs Player 2</p>
-            </div>
-            <div class="col-lg-4">
-                <table class="battlefield-table">
-                    <tbody>
-                        @for (int i = 0; i < GameCore.Field.Size; i++)
-                        {
-                            <tr class="battlefield-row">
-                                @for (int j = 0; j < GameCore.Field.Size; j++)
-                                {
-                                    if (Model.FunctionsGame.fieldViewEnemy.Plans[i, j] == 1)
+
+            <div class="col-lg-5 battlefield battlefield__rival battlefield__wait">
+                <div class="battlefield-gap">
+                    <table class="battlefield-table" style="margin-right:105px;float:right">
+                        <tbody>
+                            @for (int i = 0; i < GameCore.Field.Size; i++)
+                            {
+                                <tr class="battlefield-row">
+                                    @for (int j = 0; j < GameCore.Field.Size; j++)
                                     {
-                                        <td class="battlefield-cell battlefield-cell__busy">
-                                            <div class="battlefield-cell-content" data-y="@i" data-x="@j"></div>
-                                        </td>
+                                        if (Model.FunctionsGame.fieldViewEnemy.Plans[i, j] == 1)
+                                        {
+                                            <td class="battlefield-cell battlefield-cell__empty">
+                                                <div class="battlefield-cell-content" data-y="@i" data-x="@j"></div>
+                                            </td>
+                                        }
+                                        else if (Model.FunctionsGame.fieldViewEnemy.Plans[i, j] == 0)
+                                        {
+                                            <td class="battlefield-cell battlefield-cell__empty" style="color:red">
+                                                <div class="battlefield-cell-content" data-y="@i" data-x="@j">
+                                                </div>
+                                            </td>
+                                        }
+
                                     }
-                                    else if (Model.FunctionsGame.fieldViewEnemy.Plans[i, j] == 0)
-                                    {
-                                        <td class="battlefield-cell battlefield-cell__empty" style="color:red">
-                                            <div class="battlefield-cell-content" data-y="@i" data-x="@j">
-                                            </div>
-                                        </td>
-                                    }
+                                </tr>
+                            }
+                        </tbody>
 
-                                }
-                            </tr>
-                        }
+                    </table>
+                    <div class="battlefield-start">
+                        <div class="battlefield-start-choose_rival-label"> <a href="#" id="clickGetConnect" style="cursor:pointer">Click for a link to connect</a> </div>
+                        <div class="battlefield-start-choose_rival-label"><input type="text" readonly id="connectionIDtxt" class="form-control" onclick="this.select();" style="width:75%;display:none" /></div><br />
+                        <div class="battlefield-start-choose_rival-label"><input type="button" value="Play" id="connectBtn" class="btn" /></div>
+                    </div>
+                </div>
 
-                    </tbody>
-
-                </table>
             </div>
 
         </div>
-        <div id="loginBlock">
-            Ввойти в чат:<br />
-            <input id="loginBtn" type="button" value="Войти" />
-        </div><br />
-        <div id="chatroom"></div>
 
     </div>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -86,36 +88,56 @@
     <script src="~/lib/signalr/signalr.min.js"></script>
     <script>
     //Connect hub (SIGNALR Core....)
+        //TODO CHANGE ALL JS SHITS IN JQUERY
         function changeurl(connectionID) {
             var new_url = "https://localhost:44392/?id=" + connectionID;
             window.history.pushState("data", "Title", new_url);
+            return new_url;
+        }
+        function getRandomConnectionID() {
+            return Math.floor(Math.random() * 99999999) + 10000000;
         }
         const hubConnection = new signalR.HubConnectionBuilder()
             .withUrl("/seabattle")
             .build();
-        // диагностическое сообщение
         hubConnection.on("Notify", function (message) {
-            let elem = document.createElement("p");
-            elem.appendChild(document.createTextNode(message));
-
-            var firstElem = document.getElementById("chatroom").firstChild;
-            document.getElementById("chatroom").insertBefore(elem, firstElem);
+            console.log(message);
         });
-        // установка имени пользователя
-        document.getElementById("loginBtn").addEventListener("click", function (e) {
-            hubConnection.invoke("Enter", "");
+        var _connectionID;
+        document.getElementById("clickGetConnect").addEventListener("click", function (e) {
+
+            document.getElementById("clickGetConnect").style.display = 'none';//get <a>href->show textBox for connectionIDtxt
+            _connectionID = getRandomConnectionID();
+            var textBox = document.getElementById("connectionIDtxt");
+            textBox.setAttribute("value", changeurl(_connectionID));//changeurl and return new url to value TextBox
+            textBox.setAttribute("data-value", _connectionID);
+            textBox.style.display = 'block';
+
+        });
+        document.getElementById("connectBtn").addEventListener("click", function (e) {
+            console.log(_connectionID);
+
+            hubConnection.invoke("Enter", _connectionID);
+
         });
         hubConnection.on("GetConnectionID", function (connectionID) {
             console.log("ID: " + connectionID);
-            changeurl(connectionID);
-        });
 
+
+
+        });
         hubConnection.start();
 
-        window.onload = function() {
-            var _CurrentConnectionID = @Model.ConnectionID;
-            console.log("ID:="+_CurrentConnectionID);
-            if (_CurrentConnectionID != null) hubConnection.invoke("Enter", @Model.ConnectionID);
+        window.onload = function () {
+            @if (Model.ConnectionID!=null)
+            {
+                <text>
+                var _CurrentConnectionID = @Model.ConnectionID;
+                console.log("ID:=" + _CurrentConnectionID);
+                if (_CurrentConnectionID != null) hubConnection.invoke("Enter", @Model.ConnectionID);
+                </text>
+            }
+
         };
     </script>
 </body>

@@ -28,3 +28,75 @@ table {
     border: 2px solid #3243B2;
     background-color: #dcdcdc;
 }
+
+.battlefields {
+    padding-top: 110px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.battlefield {
+    width: 50%;
+    position: relative
+}
+
+.battlefield__self {
+    float: left
+
+}
+
+.battlefield__rival {
+    float: right
+}
+
+.battlefield__wait {
+    position: relative;
+    cursor: default
+}
+
+    .battlefield__wait:after {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba(255,255,255,.6);
+        z-index: 100;
+        content: ""
+    }
+
+.body__with-pointerevents .battlefield__wait:after {
+    display: none
+}
+
+.battlefield__rival.battlefield__wait, .battlefield__rival.battlefield__wait * {
+    cursor: default
+}
+
+.battlefields__handly .battlefield__rival {
+    display: none;
+    width: 0;
+    overflow: hidden
+}
+
+.battlefields__handly .battlefield__self {
+    margin-left: 250px
+}
+
+
+.battlefield-gap {
+    display: inline-block;
+    position: relative;
+}
+.battlefield-start {
+    position: absolute;
+    width: 100%;
+    z-index: 101;
+    margin-top: 25%
+}
+.battlefield-start-choose_rival-label{
+    position:relative;
+}

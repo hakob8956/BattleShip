@@ -29,7 +29,6 @@ namespace SeaBattle
 
         public async Task Send(string message, string username, string connectionID)
         {
-
             await Clients.Group(Context.ConnectionId).SendAsync(username, message);
         }
 
