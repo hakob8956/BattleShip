@@ -260,6 +260,6 @@ paket-files/
 __pycache__/
 *.pyc
 #project
-SignalR/*
-SignalRApp/*
-TestGame/*
+/SignalR
+/SignalRApp
+/TestGame
