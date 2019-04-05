@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GameCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using SeaBattle.Models;
 using System;
@@ -12,21 +13,22 @@ namespace SeaBattle.Controllers
     public class HomeController : Controller
     {
         IHubContext<MainHub> hubContext;
+        GeneralFunctions generalFunctions;
+
         public HomeController(IHubContext<MainHub> hubContext)
         {
             this.hubContext = hubContext;
+            this.generalFunctions = new GeneralFunctions();
         }
-        MainFunctionsGame FunctionsGame = new MainFunctionsGame();
+
         public IActionResult Index(string id = null)
         {
-            FunctionsGame.fieldPlayer.ClearField();
-            FunctionsGame.fieldPlayer.SetRandomShips();
-
-            FunctionsGame.fieldViewEnemy.ClearField();
-            FunctionsGame.fieldViewEnemy.SetRandomShips();
-            DateViewModel model = new DateViewModel { FunctionsGame = FunctionsGame, ConnectionID = id };
+            Field field = new Field();
+            field.SetRandomShips();
+            DateViewModel model = new DateViewModel { fieldPlayer = field.Plans, ConnectionID = id };
             return View(model);
         }
+
 
     }
 }

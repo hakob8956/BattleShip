@@ -20,7 +20,7 @@ hubConnection.on("Receive", function (message, userName, connectionID) {
     let elem = document.createElement("p");
     elem.appendChild(userNameElem);
     elem.appendChild(document.createTextNode(message));
-
+    a
     var firstElem = document.getElementById("chatroom").firstChild;
     document.getElementById("chatroom").insertBefore(elem, firstElem);
 

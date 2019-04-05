@@ -7,7 +7,7 @@ namespace SeaBattle.Models
 {
     public class DateViewModel
     {
-        public MainFunctionsGame FunctionsGame { get; set; }
+        public int[,] fieldPlayer { get; set; }
         public string ConnectionID { get; set; }
     }
 }

@@ -1,45 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Text;
 
 namespace GameCore
 {
     public class GeneralFunctions
     {
-        Field field;
-        public GeneralFunctions(Field _field)
-        {
-            field = _field;
-        }
 
-        public void Shoot(int x,int y)
+        public int Shoot(int value, int x, int y)//return fieldType
         {
-            if (field.CheckLocation(x, y))
+            if (x >= 0 && y >= 0 && x < 10 && y < 10)
             {
-                int status=field.Plans[x,y];
-                switch (status)
+               switch (value)
                 {
                     case (int)GameCore.FieldType.Empty:
-                        status = (int)GameCore.FieldType.Missed;
+                        value = (int)GameCore.FieldType.Missed;
                         break;
                     case (int)GameCore.FieldType.Used:
-                        status = (int)GameCore.FieldType.Shooted;
-                        break;                 
+                        value = (int)GameCore.FieldType.Shooted;
+                        break;
                     default:
                         break;
                 }
-                field.Plans[x, y] = status;
             }
+            return value;
         }
-        public bool Win()
+        public bool Win(int[,] field)
         {
             //For Optimiz.  (FieldType.Used = sum(ships * count));
             for (int i = 0; i < Field.Size; i++)
             {
                 for (int j = 0; j < Field.Size; j++)
                 {
-                    if (field.Plans[i,j] == (int)GameCore.FieldType.Used)
+                    if (field[i, j] == (int)GameCore.FieldType.Used)
                     {
                         return false;
                     }

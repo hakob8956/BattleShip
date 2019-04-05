@@ -27,6 +27,15 @@ namespace GameCore
             plans = new int[Size, Size];
             ClearField();
         }
+        public Field(int[,] _plans)
+        {
+            if (_plans.Length==plans.Length)
+            {
+                plans = _plans;
+            }
+            ClearField();
+            
+        }
 
         public void SetRandomShips()
         {

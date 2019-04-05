@@ -28,7 +28,14 @@ table {
     border: 2px solid #3243B2;
     background-color: #dcdcdc;
 }
-
+.battlefield-cell__shoot {
+    background-image:url('/img/cross.png');
+    background-size:28px 28px;
+}
+.battlefield-cell__missed {
+    background-image: url('/img/point.png');
+    background-size: 28px 28px;
+}
 .battlefields {
     padding-top: 110px;
     -webkit-user-select: none;
@@ -97,6 +104,16 @@ table {
     z-index: 101;
     margin-top: 25%
 }
+.battlefield-start-button__disabled {
+    cursor: default !important;
+    top: 0;
+    opacity: .5;
+    pointer-events: none
+}
+
 .battlefield-start-choose_rival-label{
     position:relative;
+}
+.none{
+    display:none;
 }
