@@ -28,6 +28,10 @@ table {
     border: 2px solid #3243B2;
     background-color: #dcdcdc;
 }
+.battlefield__rival .battlefield-cell:hover {
+    cursor: pointer;
+    border: 1.5px solid green;
+}
 .battlefield-cell__shoot {
     background-image:url('/img/cross.png');
     background-size:28px 28px;

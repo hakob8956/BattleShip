@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 
 namespace SeaBattle
@@ -34,17 +35,14 @@ namespace SeaBattle
             Connections.Add(Context.ConnectionId, connectionId);//Add Clients
 
         }
-        //public void ReadyConnection()
-        //{
 
-        //}
-        public async Task SendStatus(int value, int x, int y, string connectionId)
+        public async Task SendStatus(int[,] items, int x, int y, string connectionId)
         {
-            int newValue = GeneralFunctions.Shoot(value, x, y);
+            var newField = GeneralFunctions.Shoot(items, x, y);
             var anotherConnectionId = Connections.FirstOrDefault(p => p.Value == connectionId && p.Key != Context.ConnectionId).Key;
-            await Clients.OthersInGroup(connectionId).SendAsync("TakeStatus", newValue);
-            await Clients.GroupExcept(connectionId, anotherConnectionId).SendAsync("SetStatus", newValue, x, y, connectionId);
-
+            var jsonNewField = JsonConvert.SerializeObject(newField);
+            await Clients.OthersInGroup(connectionId).SendAsync("TakeStatus", jsonNewField);
+            await Clients.GroupExcept(connectionId, anotherConnectionId).SendAsync("SetStatus", jsonNewField);
         }
         public async Task SendCordinateEnemy(int x, int y, string connectionId)
         {

@@ -45,7 +45,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-lg-5 battlefield battlefield__rival battlefield__wait" id="enemy">
                 <div class="battlefield-gap">
                     <table class="battlefield-table" style="margin-right:105px;float:right">
@@ -87,10 +86,6 @@
     <script>
     //Connect hub (SIGNALR Core....)
         //TODO CHANGE ALL JS SHITS IN JQUERY
-
-
-        var newValue;
-        var oldValue;
         var _connectionId;
         function ReadyStart(Yes) {
             if (Yes) {
@@ -110,37 +105,32 @@
                 $(".battlefield__rival").addClass("battlefield__wait");
             }
         }
-         function GetValue(x, y) {
-          @for (int i = 0; i < GameCore.Field.Size; i++)
-           {
-
-               @for (int j = 0; j < GameCore.Field.Size; j++)
-               {
-                   <text>
-
-
-             if (@i == y && @j == x) {
-                 return  @Model.fieldPlayer[i, j];
-                    }
-                  </text>
-               }
-             }
+        function GetField() {//RETURN FIELD FOR SIGNAL R
+            var arr = [];
+            @for (int i = 0; i < GameCore.Field.Size; i++) {
+                <text> var row = [];</text>
+                @for (int j = 0; j < GameCore.Field.Size; j++) {
+                    <text>
+                    var value = @Model.fieldPlayer[i,j];
+                    row.push(value);
+                    </text>
+                }
+                <text>arr.push(row);</text>
+            }
+            return arr;
         }
-
         $(".battlefield__rival tr td.battlefield-cell__empty").click(function (e) {
             newValue = 0;
             let currentElement = $(this);
             let x = currentElement.children().data("x");
             let y = currentElement.children().data("y");
-            
             console.log(x, y);
             hubConnection.invoke("SendCordinateEnemy", x, y, _connectionId);//GetValue
 
-            setTimeout(SetStatusColor, 100, currentElement);                  
+            //setTimeout(SetStatusColor, 100, currentElement);
         });
-        function SetStatusColor(currentElement) {
-            console.log(newValue);
-            switch (newValue) {
+        function SetStatusColor(currentElement,value) {
+            switch (value) {
                 case 2:
                     currentElement.removeClass("battlefield-cell__empty").removeClass("battlefield-cell__busy").addClass("battlefield-cell__shoot");
                     break;
@@ -170,21 +160,33 @@
         });
         //TODO FIX
         hubConnection.on("SendRequestTakeValue", function (x, y, connectionId) {
-             oldValue = GetValue(x, y);
-            console.log("SendRequestTakeValue  value = " + oldValue);
 
-            hubConnection.invoke("SendStatus", oldValue, x, y, connectionId);
+            var items = GetField();//items->return Field(matrix[10,10])
+            console.log("SendRequestTakeValue");
+            hubConnection.invoke("SendStatus", items, x, y, connectionId);//Convert JSON ->
         });
-        hubConnection.on("TakeStatus", function (_newValue) {      
-            newValue = _newValue;
-            console.log("TakeStatus " + newValue)
-        });
+        hubConnection.on("TakeStatus", function (_newField) {
+            let field = JSON.parse(_newField);//Get array[,]
+            for (var i = 0; i < 10; i++) {
+                for (var j = 0; j < 10; j++) {
+                    if (field[i][j] == -1 || field[i][j] == 2) {
+                        let currentElement = $(".battlefield__rival tr td.battlefield-cell .battlefield-cell-content[data-x='" +j + "'][data-y='" + i + "']");
+                        SetStatusColor(currentElement.parent(), field[i][j]);
+                    }
+                }
+            }
+      });
 
-        hubConnection.on("SetStatus", function (_newValue, x, y, connectionId) {
-            newValue = _newValue;
-            let currentElement = $(".battlefield__self tr td.battlefield-cell .battlefield-cell-content[data-x='" + x + "'][data-y='" + y + "']");
-            SetStatusColor(currentElement.parent());
-
+        hubConnection.on("SetStatus", function (_newField) {
+            let field = JSON.parse(_newField);//Get array[,]
+            for (var i = 0; i < 9; i++) {
+                for (var j = 0; j < 9; j++) {
+                    if (field[i][j] == -1 || field[i][j] == 2) {
+                        let currentElement = $(".battlefield__self tr td.battlefield-cell .battlefield-cell-content[data-x='" + j + "'][data-y='" + i + "']");
+                        SetStatusColor(currentElement.parent(), field[i][j]);
+                    }
+                }
+            }
         });
         document.getElementById("connectBtn").addEventListener("click", function (e) {
             hubConnection.invoke("Enter", _connectionId);
@@ -193,7 +195,6 @@
             console.log("ID: " + connectionID);
         });
         hubConnection.start();
-
             window.onload = function () {
                 @if (Model.ConnectionID!=null)
                 {

@@ -74,7 +74,7 @@ namespace GameCore
             return count;
 
         }
-        public bool CheckLocation(int x, int y)
+        public static bool CheckLocation(int x, int y)
         {
             if (!(x >= 0 && y >= 0 && x < Size && y < Size))
                 return false;
@@ -161,6 +161,7 @@ namespace GameCore
             }
             return false;
         }
+
         public void ClearField()
         {
             for (int i = 0; i < Size; i++)
