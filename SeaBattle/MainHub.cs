@@ -1,11 +1,11 @@
 ﻿using GameCore;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using SeaBattle.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 
 namespace SeaBattle
@@ -15,6 +15,8 @@ namespace SeaBattle
         //TODO CREATE INTERFACE FOR Dictinoray-->(Singleton)
         private static Dictionary<string, string> Connections = new Dictionary<string, string>();//ClientId,GroupName
         private GeneralFunctions GeneralFunctions = new GeneralFunctions();
+        private static bool currentTurn = true;//true -> turn in process 
+        private static string currentConnectionIdThisTurn = String.Empty;
 
         public async Task Enter(string connectionId = null)//JoinGroup,Merge date players
         {
@@ -33,20 +35,41 @@ namespace SeaBattle
                 await Clients.Group(connectionId).SendAsync("Notify", $"{connectionId} вошел в чат");
             }
             Connections.Add(Context.ConnectionId, connectionId);//Add Clients
+            if (Connections.Where(p => p.Value == connectionId).Count() == 2)
+            {
+                currentConnectionIdThisTurn = Connections.FirstOrDefault(p => p.Value == connectionId && p.Key != Context.ConnectionId).Key;
+                await Clients.Group(connectionId).SendAsync("StartGame", connectionId);
+                await Clients.OthersInGroup(connectionId).SendAsync("ChangeTurn", connectionId, currentTurn);
+            }
 
         }
-
         public async Task SendStatus(int[,] items, int x, int y, string connectionId)
         {
+
             var newField = GeneralFunctions.Shoot(items, x, y);
-            var anotherConnectionId = Connections.FirstOrDefault(p => p.Value == connectionId && p.Key != Context.ConnectionId).Key;
             var jsonNewField = JsonConvert.SerializeObject(newField);
-            await Clients.OthersInGroup(connectionId).SendAsync("TakeStatus", jsonNewField);
-            await Clients.GroupExcept(connectionId, anotherConnectionId).SendAsync("SetStatus", jsonNewField);
+            var anotherConnectionId = Connections.FirstOrDefault(p => p.Value == connectionId && p.Key != Context.ConnectionId).Key;
+
+            if (newField[y, x] != (int)FieldType.Shooted)
+            {
+                currentConnectionIdThisTurn = Context.ConnectionId;
+                currentTurn = false;
+            }
+            else
+                currentTurn = true;
+
+            await Clients.OthersInGroup(connectionId).SendAsync("TakeStatus", jsonNewField, currentTurn);
+            await Clients.GroupExcept(connectionId, anotherConnectionId).SendAsync("SetStatus", jsonNewField, !currentTurn);//Send current User
+
+
         }
         public async Task SendCordinateEnemy(int x, int y, string connectionId)
         {
-            await Clients.OthersInGroup(connectionId).SendAsync("SendRequestTakeValue", x, y, connectionId);
+            if (currentConnectionIdThisTurn == Context.ConnectionId)//Check Current Turn
+            {
+                currentConnectionIdThisTurn = Context.ConnectionId;
+                await Clients.OthersInGroup(connectionId).SendAsync("SendRequestTakeValue", x, y, connectionId);
+            }
         }
         public override Task OnConnectedAsync()
         {

@@ -8,7 +8,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 </head>
 <body>
-    <div class="container" style="margin-top:50px">
+    <div class="container-fluid" style="margin-top:50px">
         <div class="row">
             <div class="col-lg-5 battlefield battlefield__self battlefield__wait">
                 <div class="battlefield-gap">
@@ -74,11 +74,6 @@
             </div>
 
         </div>
-
-        <input type="button" value="Go" id="myButton" />
-
-
-
     </div>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -142,9 +137,9 @@
             currentElement.attr("disabled", "disabled").off('click');
         }
         function changeurl(connectionID) {
-            var new_url = "https://localhost:44392/?id=" + connectionID;
+            var new_url = "?id=" + connectionID;
             window.history.pushState("data", "Title", new_url);
-            return new_url;
+            return window.location.href;
         }
 
         function getRandomConnectionID() {
@@ -165,7 +160,7 @@
             console.log("SendRequestTakeValue");
             hubConnection.invoke("SendStatus", items, x, y, connectionId);//Convert JSON ->
         });
-        hubConnection.on("TakeStatus", function (_newField) {
+        hubConnection.on("TakeStatus", function (_newField,currentTurn) {
             let field = JSON.parse(_newField);//Get array[,]
             for (var i = 0; i < 10; i++) {
                 for (var j = 0; j < 10; j++) {
@@ -175,19 +170,29 @@
                     }
                 }
             }
+            YourTurn(currentTurn);
       });
 
-        hubConnection.on("SetStatus", function (_newField) {
+        hubConnection.on("SetStatus", function (_newField,currentTurn) {
             let field = JSON.parse(_newField);//Get array[,]
-            for (var i = 0; i < 9; i++) {
-                for (var j = 0; j < 9; j++) {
+            for (var i = 0; i < 10; i++) {
+                for (var j = 0; j < 10; j++) {
                     if (field[i][j] == -1 || field[i][j] == 2) {
                         let currentElement = $(".battlefield__self tr td.battlefield-cell .battlefield-cell-content[data-x='" + j + "'][data-y='" + i + "']");
                         SetStatusColor(currentElement.parent(), field[i][j]);
                     }
                 }
             }
+            YourTurn(currentTurn);
         });
+        hubConnection.on("StartGame", function (connectionId) {
+            ReadyStart(true);
+            YourTurn(false);
+        });
+        hubConnection.on("ChangeTurn", function (connectionId, YesOrNo) {
+            YourTurn(YesOrNo);
+        });
+
         document.getElementById("connectBtn").addEventListener("click", function (e) {
             hubConnection.invoke("Enter", _connectionId);
         });
@@ -205,7 +210,7 @@
             else
             {
                 <text>
-               _connectionId = getRandomConnectionID();
+                _connectionId = getRandomConnectionID();
                 </text>
             }
 

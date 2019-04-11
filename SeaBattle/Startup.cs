@@ -26,7 +26,7 @@ namespace SeaBattle
             services.AddSignalR(hubOptions =>
             {
                 hubOptions.EnableDetailedErrors = true;
-                hubOptions.KeepAliveInterval = System.TimeSpan.FromMinutes(2);
+                hubOptions.KeepAliveInterval = System.TimeSpan.FromMinutes(3);
             });
         
             services.AddMvc();

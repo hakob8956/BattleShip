@@ -33,12 +33,10 @@ table {
     border: 1.5px solid green;
 }
 .battlefield-cell__shoot {
-    background-image:url('/img/cross.png');
-    background-size:28px 28px;
+   background-color:red;
 }
 .battlefield-cell__missed {
-    background-image: url('/img/point.png');
-    background-size: 28px 28px;
+    background-color:yellow;
 }
 .battlefields {
     padding-top: 110px;
@@ -49,7 +47,7 @@ table {
 }
 
 .battlefield {
-    width: 50%;
+    
     position: relative
 }
 
