@@ -119,3 +119,20 @@ table {
 .none{
     display:none;
 }
+.notifications {
+    margin: 10px auto;
+    width: 400px;
+    height: 100px
+}
+
+.notification {
+    background: #f8f8f8;
+    padding: .5em;
+    overflow: hidden;
+    position: relative
+}
+
+.notification-message {
+    position: relative;
+    z-index: 0
+}

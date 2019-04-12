@@ -12,15 +12,16 @@ namespace SeaBattle
 {
     public class MainHub : Hub
     {
-        //TODO CREATE INTERFACE FOR Dictinoray-->(Singleton)
-        private static Dictionary<string, string> Connections = new Dictionary<string, string>();//ClientId,GroupName
+        private static Dictionary<string, ConnectionModel> userRepo = new Dictionary<string, ConnectionModel>();//ClientId,ConnectionModel(id,field)
+        private static Dictionary<string, SortStepModel> userGroupRepo = new Dictionary<string, SortStepModel>();//connectionId(groupId),SortStepModel(currentTurn,currentConnectionIdThisTurn)
         private GeneralFunctions GeneralFunctions = new GeneralFunctions();
-        private static bool currentTurn = true;//true -> turn in process 
-        private static string currentConnectionIdThisTurn = String.Empty;
 
         public async Task Enter(string connectionId = null)//JoinGroup,Merge date players
         {
-            if (Connections.Where(p => p.Value == connectionId).Count() >= 2) connectionId = null;//the user of group is'nt  more than two
+            Field field = new Field();
+            field.SetRandomShips();
+
+            if (userRepo.Where(p => p.Value.connectionId == connectionId).Count() >= 2) connectionId = null;//the user of group is'nt  more than two
             if (String.IsNullOrEmpty(connectionId))//Genereic new connectionId
             {
                 Random rnd = new Random();
@@ -32,45 +33,62 @@ namespace SeaBattle
             else
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, connectionId);
-                await Clients.Group(connectionId).SendAsync("Notify", $"{connectionId} вошел в чат");
+                await Clients.Group(connectionId).SendAsync("Notify", $"Waiting for opponent");
             }
-            Connections.Add(Context.ConnectionId, connectionId);//Add Clients
-            if (Connections.Where(p => p.Value == connectionId).Count() == 2)
+            userRepo[Context.ConnectionId] = new ConnectionModel()
             {
-                currentConnectionIdThisTurn = Connections.FirstOrDefault(p => p.Value == connectionId && p.Key != Context.ConnectionId).Key;
-                await Clients.Group(connectionId).SendAsync("StartGame", connectionId);
-                await Clients.OthersInGroup(connectionId).SendAsync("ChangeTurn", connectionId, currentTurn);
-            }
-
-        }
-        public async Task SendStatus(int[,] items, int x, int y, string connectionId)
-        {
-
-            var newField = GeneralFunctions.Shoot(items, x, y);
-            var jsonNewField = JsonConvert.SerializeObject(newField);
-            var anotherConnectionId = Connections.FirstOrDefault(p => p.Value == connectionId && p.Key != Context.ConnectionId).Key;
-
-            if (newField[y, x] != (int)FieldType.Shooted)
+                connectionId = connectionId,
+                field = field.Plans
+            };
+            if (userRepo.Where(p => p.Value.connectionId == connectionId).Count() == 2)
             {
-                currentConnectionIdThisTurn = Context.ConnectionId;
-                currentTurn = false;
+                var anotherUserConnectionID = userRepo.FirstOrDefault(p => p.Value.connectionId == connectionId && p.Key != Context.ConnectionId).Key;
+                userGroupRepo[connectionId] = new SortStepModel
+                {
+                    currentConnectionIdThisTurn = anotherUserConnectionID,
+                    currentTurn = true
+                };
+                
+                await Clients.OthersInGroup(connectionId).SendAsync("StartGame", JsonConvert.SerializeObject(userRepo[anotherUserConnectionID].field),connectionId);
+                await Clients.GroupExcept(connectionId,anotherUserConnectionID).SendAsync("StartGame", JsonConvert.SerializeObject(userRepo[Context.ConnectionId].field),connectionId);
+
+                await Clients.OthersInGroup(connectionId).SendAsync("ChangeTurn", userGroupRepo[connectionId].currentTurn);
+
+                await Clients.OthersInGroup(connectionId).SendAsync("Notify", "The game started, your turn.");
+                await Clients.GroupExcept(connectionId, userGroupRepo[connectionId].currentConnectionIdThisTurn).SendAsync("Notify", "Opponent's turn, please wait.");
+
             }
-            else
-                currentTurn = true;
-
-            await Clients.OthersInGroup(connectionId).SendAsync("TakeStatus", jsonNewField, currentTurn);
-            await Clients.GroupExcept(connectionId, anotherConnectionId).SendAsync("SetStatus", jsonNewField, !currentTurn);//Send current User
-
-
         }
         public async Task SendCordinateEnemy(int x, int y, string connectionId)
         {
-            if (currentConnectionIdThisTurn == Context.ConnectionId)//Check Current Turn
+            if (userGroupRepo[connectionId].currentConnectionIdThisTurn == Context.ConnectionId)//Check Current Turn
             {
-                currentConnectionIdThisTurn = Context.ConnectionId;
-                await Clients.OthersInGroup(connectionId).SendAsync("SendRequestTakeValue", x, y, connectionId);
+                var anotherConnectionId = userRepo.FirstOrDefault(p => p.Value.connectionId == connectionId && p.Key != Context.ConnectionId).Key;
+
+                var enemyfield = userRepo[anotherConnectionId].field;//Take EnemyField
+                var newEnemyField = GeneralFunctions.Shoot(enemyfield, x, y);//Set new EnemyField
+                bool win = GeneralFunctions.Win(newEnemyField);
+                var jsonNewField = JsonConvert.SerializeObject(newEnemyField);
+
+                if (newEnemyField[y, x] != (int)FieldType.Shooted)
+                {
+                    userGroupRepo[connectionId].currentConnectionIdThisTurn = anotherConnectionId;
+                    userGroupRepo[connectionId].currentTurn = false;
+                }
+                else
+                    userGroupRepo[connectionId].currentTurn = true;
+
+                //TODO FIX WIN
+                string message1 = userGroupRepo[connectionId].currentTurn ? "Your turn." : "Opponent's turn, please wait.";
+                string message2 = !userGroupRepo[connectionId].currentTurn ? "Your turn." : "Opponent's turn, please wait.";
+                await Clients.GroupExcept(connectionId,anotherConnectionId).SendAsync("TakeStatus", jsonNewField, userGroupRepo[connectionId].currentTurn, message1, win);
+                await Clients.OthersInGroup(connectionId).SendAsync("SetStatus", jsonNewField, !userGroupRepo[connectionId].currentTurn, message2);//Send current User
             }
+
+
         }
+
+
         public override Task OnConnectedAsync()
         {
             return base.OnConnectedAsync();
@@ -78,13 +96,12 @@ namespace SeaBattle
 
         public override Task OnDisconnectedAsync(Exception exception)//IF One user out at group delete all members of group!
         {
-            string groupName = Connections.FirstOrDefault(p => p.Key == Context.ConnectionId).Value;//Take user GroupName
-            Connections.Remove(Context.ConnectionId);//Delete currentUser
-            foreach (var user in Connections.Where(p => p.Value == groupName))//Delete users of Group
-            {
-                Groups.RemoveFromGroupAsync(user.Key, user.Value);//user.Key->ConnectionID,user.Value->GroupName
-                Connections.Remove(user.Key);
-            }
+
+            string groupname = userRepo.FirstOrDefault(p => p.Key == Context.ConnectionId).Value.connectionId;//take user groupname(connectionId)
+            userRepo.Remove(Context.ConnectionId);
+            var anotheruserId = userRepo.FirstOrDefault(p => p.Value.connectionId == groupname).Key;
+            if (anotheruserId == null) userRepo.Remove(anotheruserId);
+            userGroupRepo.Remove(groupname);
             return base.OnDisconnectedAsync(exception);
         }
 

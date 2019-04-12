@@ -31,7 +31,7 @@ namespace GameCore
                 field[y, x] = value;
                 if (value == (int)FieldType.Shooted)
                 {
-                    bool onlyOneShip = true;
+                    int statusShip = 1;
                     int[] xx = new int[8], yy = new int[8];
                     xx[0] = x + 1; yy[0] = y + 1;
                     xx[1] = x - 1; yy[1] = y + 1;
@@ -41,19 +41,22 @@ namespace GameCore
                     xx[5] = x + 1; yy[5] = y;
                     xx[6] = x - 1; yy[6] = y;
                     xx[7] = x; yy[7] = y - 1;
-
                     for (int i = 0; i < 8; i++)
                     {
                         if (Field.CheckLocation(xx[i], yy[i]))
                         {
-                            if (field[yy[i], xx[i]] == (int)FieldType.Used || field[yy[i], xx[i]] == (int)FieldType.Shooted)
+                            if (field[yy[i], xx[i]] == (int)FieldType.Used)
                             {
-                                onlyOneShip = false;
+                                statusShip = 2;//
                                 break;
+                            }
+                            else if (field[yy[i], xx[i]] == (int)FieldType.Shooted)
+                            {
+                                statusShip = 3;
                             }
                         }
                     }
-                    if (onlyOneShip)
+                    if (statusShip == 1)//OnDecker
                     {
                         for (int i = 0; i < 8; i++)
                         {
@@ -63,22 +66,25 @@ namespace GameCore
                             }
                         }
                     }
-                    else
+                    else if (statusShip == 2)//hurt
                     {
                         for (int i = 0; i < 4; i++)
                         {
                             if (Field.CheckLocation(xx[i], yy[i]))
-                            {                             
+                            {
                                 field[yy[i], xx[i]] = (int)FieldType.Missed;
                             }
                         }
+
+                    }
+                    else if (statusShip == 3)//last ship
+                    {
+
                     }
 
                 }
-
             }
             return field;
-
         }
         public bool Win(int[,] field)
         {

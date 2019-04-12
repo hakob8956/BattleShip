@@ -10,6 +10,11 @@
 <body>
     <div class="container-fluid" style="margin-top:50px">
         <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-3"><div class="notification none" style="text-align:center" id="notif_content"></div></div>
+            <div class="col-md-4"></div>
+        </div>
+        <div class="row">
             <div class="col-lg-5 battlefield battlefield__self battlefield__wait">
                 <div class="battlefield-gap">
                     <table class="battlefield-table" style="margin-left:105px;float:left">
@@ -20,19 +25,9 @@
                                 <tr class="battlefield-row">
                                     @for (int j = 0; j < GameCore.Field.Size; j++)
                                     {
-                                        if (Model.fieldPlayer[i, j] == 0)
-                                        {
                                             <td class="battlefield-cell battlefield-cell__empty">
                                                 <div class="battlefield-cell-content" data-y="@i" data-x="@j"></div>
-                                            </td>
-                                        }
-                                        else if (Model.fieldPlayer[i, j] == 1)
-                                        {
-                                            <td class="battlefield-cell battlefield-cell__busy">
-                                                <div class="battlefield-cell-content" data-y="@i" data-x="@j">
-                                                </div>
-                                            </td>
-                                        }
+                                            </td>                                                                             
                                     }
                                 </tr>
                             }
@@ -86,6 +81,7 @@
             if (Yes) {
                 $(".battlefield-start").addClass("none");
                 $(".battlefield__rival").removeClass("battlefield__wait").addClass("battlefield__start");
+                $(".notification").removeClass("none");
             } else {
                 $(".battlefield-start").removeClass("none");
                 $(".battlefield__rival").addClass("battlefield__wait").removeClass("battlefield__start");
@@ -100,20 +96,7 @@
                 $(".battlefield__rival").addClass("battlefield__wait");
             }
         }
-        function GetField() {//RETURN FIELD FOR SIGNAL R
-            var arr = [];
-            @for (int i = 0; i < GameCore.Field.Size; i++) {
-                <text> var row = [];</text>
-                @for (int j = 0; j < GameCore.Field.Size; j++) {
-                    <text>
-                    var value = @Model.fieldPlayer[i,j];
-                    row.push(value);
-                    </text>
-                }
-                <text>arr.push(row);</text>
-            }
-            return arr;
-        }
+
         $(".battlefield__rival tr td.battlefield-cell__empty").click(function (e) {
             newValue = 0;
             let currentElement = $(this);
@@ -131,6 +114,12 @@
                     break;
                 case -1:
                     currentElement.removeClass("battlefield-cell__empty").removeClass("battlefield-cell__busy").addClass("battlefield-cell__missed");
+                    break;
+                case 0:
+                    currentElement.removeClass("battlefield-cell__empty").removeClass("battlefield-cell__busy").addClass("battlefield-cell__empty");
+                    break;
+                case 1:
+                    currentElement.removeClass("battlefield-cell__empty").removeClass("battlefield-cell__busy").addClass("battlefield-cell__busy");
                     break;
                 default:
             }
@@ -152,15 +141,10 @@
 
         hubConnection.on("Notify", function (message) {
             console.log(message);
+            $("#notif_content").text(message);
         });
-        //TODO FIX
-        hubConnection.on("SendRequestTakeValue", function (x, y, connectionId) {
 
-            var items = GetField();//items->return Field(matrix[10,10])
-            console.log("SendRequestTakeValue");
-            hubConnection.invoke("SendStatus", items, x, y, connectionId);//Convert JSON ->
-        });
-        hubConnection.on("TakeStatus", function (_newField,currentTurn) {
+        hubConnection.on("TakeStatus", function (_newField,currentTurn,message,win) {
             let field = JSON.parse(_newField);//Get array[,]
             for (var i = 0; i < 10; i++) {
                 for (var j = 0; j < 10; j++) {
@@ -170,10 +154,14 @@
                     }
                 }
             }
+            $("#notif_content").text(message);
             YourTurn(currentTurn);
+            if (win) {
+                alert("You Win");
+            }
       });
 
-        hubConnection.on("SetStatus", function (_newField,currentTurn) {
+        hubConnection.on("SetStatus", function (_newField,currentTurn,message) {
             let field = JSON.parse(_newField);//Get array[,]
             for (var i = 0; i < 10; i++) {
                 for (var j = 0; j < 10; j++) {
@@ -184,22 +172,35 @@
                 }
             }
             YourTurn(currentTurn);
+            $("#notif_content").text(message);
         });
-        hubConnection.on("StartGame", function (connectionId) {
+        hubConnection.on("StartGame", function (_newField, connectionId) {
+            let field = JSON.parse(_newField);
+            for (var i = 0; i < 10; i++) {
+                for (var j = 0; j < 10; j++) {
+                        let currentElement = $(".battlefield__self tr td.battlefield-cell .battlefield-cell-content[data-x='" + j + "'][data-y='" + i + "']");
+                        SetStatusColor(currentElement.parent(), field[i][j]);
+                }
+            }
             ReadyStart(true);
             YourTurn(false);
+
+
         });
-        hubConnection.on("ChangeTurn", function (connectionId, YesOrNo) {
+        hubConnection.on("ChangeTurn", function (YesOrNo) {
             YourTurn(YesOrNo);
         });
 
         document.getElementById("connectBtn").addEventListener("click", function (e) {
             hubConnection.invoke("Enter", _connectionId);
+            $(".notification").removeClass("none");
         });
         hubConnection.on("GetConnectionID", function (connectionID) {
             console.log("ID: " + connectionID);
         });
+
         hubConnection.start();
+        hubConnection.serverTimeoutInMilliseconds = 100000;//100 second
             window.onload = function () {
                 @if (Model.ConnectionID!=null)
                 {
