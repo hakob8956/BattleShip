@@ -6,6 +6,7 @@ using System.Text;
 
 namespace GameCore
 {
+   
     public class Field
     {
         public static int Size { get; } = 10;
@@ -15,6 +16,25 @@ namespace GameCore
             public int x { get; set; }
             public int y { get; set; }
 
+        }
+        public struct ArroundCords
+        {
+            public int[] xx { get; set; }
+            public int[] yy { get; set; }
+            public ArroundCords(int x, int y)
+            {
+                int[] xx = new int[8], yy = new int[8];
+                xx[0] = x + 1; yy[0] = y + 1;
+                xx[1] = x - 1; yy[1] = y + 1;
+                xx[2] = x + 1; yy[2] = y - 1;
+                xx[3] = x - 1; yy[3] = y - 1;
+                xx[4] = x; yy[4] = y + 1;
+                xx[5] = x + 1; yy[5] = y;
+                xx[6] = x - 1; yy[6] = y;
+                xx[7] = x; yy[7] = y - 1;
+                this.xx = xx;
+                this.yy = yy;
+            }
         }
         public int[,] Plans
         {
@@ -29,12 +49,12 @@ namespace GameCore
         }
         public Field(int[,] _plans)
         {
-            if (_plans.Length==plans.Length)
+            if (_plans.Length == plans.Length)
             {
                 plans = _plans;
             }
             ClearField();
-            
+
         }
 
         public void SetRandomShips()
@@ -140,21 +160,13 @@ namespace GameCore
         {
             if (CheckLocation(x, y))
             {
-                int[] xx = new int[9], yy = new int[9];
-                xx[0] = x + 1; yy[0] = y + 1;
-                xx[1] = x; yy[1] = y + 1;
-                xx[2] = x - 1; yy[2] = y + 1;
-                xx[3] = x + 1; yy[3] = y;
-                xx[4] = x; yy[4] = y;
-                xx[5] = x - 1; yy[5] = y;
-                xx[6] = x + 1; yy[6] = y - 1;
-                xx[7] = x; yy[7] = y - 1;
-                xx[8] = x - 1; yy[8] = y - 1;
-                for (int i = 0; i < 9; i++)
+                ArroundCords arround = new ArroundCords(x, y);
+                if (plans[y, x] != (int)FieldType.Empty) return false;
+                for (int i = 0; i < 8; i++)
                 {
-                    if (CheckLocation(xx[i],yy[i]))
+                    if (CheckLocation(arround.xx[i], arround.yy[i]))
                     {
-                        if (plans[xx[i], yy[i]] != (int)FieldType.Empty) return false;
+                        if (plans[arround.xx[i], arround.yy[i]] != (int)FieldType.Empty) return false;
                     }
                 }
                 return true;

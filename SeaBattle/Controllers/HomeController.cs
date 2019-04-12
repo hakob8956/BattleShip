@@ -12,14 +12,6 @@ namespace SeaBattle.Controllers
 {
     public class HomeController : Controller
     {
-        IHubContext<MainHub> hubContext;
-        GeneralFunctions generalFunctions;
-
-        public HomeController(IHubContext<MainHub> hubContext)
-        {
-            this.hubContext = hubContext;
-            this.generalFunctions = new GeneralFunctions();
-        }
 
         public IActionResult Index(string id = null)
         {

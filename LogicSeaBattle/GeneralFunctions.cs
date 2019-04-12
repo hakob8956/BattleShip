@@ -8,6 +8,7 @@ namespace GameCore
 {
     public class GeneralFunctions
     {
+
         private int GetValue(int value)
         {
             switch (value)
@@ -23,36 +24,34 @@ namespace GameCore
             }
             return value;
         }
+
         public int[,] Shoot(int[,] field, int x, int y)//return fieldType
         {
+
             if (Field.CheckLocation(x, y))
             {
+                Field.ArroundCords arround = new Field.ArroundCords(x, y);
+                int dirX = 0, dirY = 0;
                 int value = GetValue(field[y, x]);//Get current Value
                 field[y, x] = value;
                 if (value == (int)FieldType.Shooted)
                 {
                     int statusShip = 1;
-                    int[] xx = new int[8], yy = new int[8];
-                    xx[0] = x + 1; yy[0] = y + 1;
-                    xx[1] = x - 1; yy[1] = y + 1;
-                    xx[2] = x + 1; yy[2] = y - 1;
-                    xx[3] = x - 1; yy[3] = y - 1;
-                    xx[4] = x; yy[4] = y + 1;
-                    xx[5] = x + 1; yy[5] = y;
-                    xx[6] = x - 1; yy[6] = y;
-                    xx[7] = x; yy[7] = y - 1;
+
                     for (int i = 0; i < 8; i++)
                     {
-                        if (Field.CheckLocation(xx[i], yy[i]))
+                        if (Field.CheckLocation(arround.xx[i], arround.yy[i]))
                         {
-                            if (field[yy[i], xx[i]] == (int)FieldType.Used)
+                            if (field[arround.yy[i], arround.xx[i]] == (int)FieldType.Used)
                             {
                                 statusShip = 2;//
                                 break;
                             }
-                            else if (field[yy[i], xx[i]] == (int)FieldType.Shooted)
+                            else if (field[arround.yy[i], arround.xx[i]] == (int)FieldType.Shooted)
                             {
                                 statusShip = 3;
+                                dirX = arround.xx[i];
+                                dirY = arround.yy[i];
                             }
                         }
                     }
@@ -60,9 +59,9 @@ namespace GameCore
                     {
                         for (int i = 0; i < 8; i++)
                         {
-                            if (Field.CheckLocation(xx[i], yy[i]))
+                            if (Field.CheckLocation(arround.xx[i], arround.yy[i]))
                             {
-                                field[yy[i], xx[i]] = (int)FieldType.Missed;
+                                field[arround.yy[i], arround.xx[i]] = (int)FieldType.Missed;
                             }
                         }
                     }
@@ -70,22 +69,43 @@ namespace GameCore
                     {
                         for (int i = 0; i < 4; i++)
                         {
-                            if (Field.CheckLocation(xx[i], yy[i]))
+                            if (Field.CheckLocation(arround.xx[i], arround.yy[i]))
                             {
-                                field[yy[i], xx[i]] = (int)FieldType.Missed;
+                                field[arround.yy[i], arround.xx[i]] = (int)FieldType.Missed;
                             }
                         }
 
                     }
                     else if (statusShip == 3)//last ship
                     {
+                        int XD = x - dirX;
+                        int YD = y - dirY;
+                        while (Field.CheckLocation(x,y) && field[y,x]==(int)FieldType.Shooted)
+                        {
+                            arround = new Field.ArroundCords(x,y);
+                            for (int i = 0; i < 8; i++)
+                            {
+                                if (Field.CheckLocation(arround.xx[i],arround.yy[i]))
+                                {
+                                    if (field[arround.yy[i],arround.xx[i]]==(int)FieldType.Empty)
+                                    {
+                                        field[arround.yy[i], arround.xx[i]] = (int)FieldType.Missed;
+                                    }
+                                }
+                            }
+                            x -= XD;
+                            y -= YD;
+                        }
+                        
 
                     }
-
                 }
+
             }
             return field;
         }
+
+
         public bool Win(int[,] field)
         {
             for (int i = 0; i < Field.Size; i++)
