@@ -8,6 +8,6 @@ namespace SeaBattle.Models
     public class DateViewModel
     {
         public int[,] fieldPlayer { get; set; }
-        public string ConnectionID { get; set; }
+        public int countKill { get; set; }
     }
 }

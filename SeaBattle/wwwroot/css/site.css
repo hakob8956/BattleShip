@@ -11,6 +11,7 @@
     border: 1px solid #b4b4ff;
     padding: 0
 }
+
 table {
     margin: 0;
     padding: 0;
@@ -19,25 +20,34 @@ table {
     font: inherit;
     vertical-align: baseline
 }
+
 .battlefield-cell-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
     height: 2em;
     width: 2em;
 }
+
 .battlefield-cell__busy {
     border: 2px solid #3243B2;
     background-color: #dcdcdc;
 }
+
 .battlefield__rival .battlefield-cell:hover {
     cursor: pointer;
     border: 1.5px solid green;
 }
+
 .battlefield-cell__shoot {
-   background-color:red;
+    background-color: #faffbb;
 }
+
 .battlefield-cell__missed {
-    background-color:yellow;
+     background-color: #d6d6ce;
 }
+
 .battlefields {
     padding-top: 110px;
     -webkit-user-select: none;
@@ -47,13 +57,11 @@ table {
 }
 
 .battlefield {
-    
     position: relative
 }
 
 .battlefield__self {
     float: left
-
 }
 
 .battlefield__rival {
@@ -100,12 +108,14 @@ table {
     display: inline-block;
     position: relative;
 }
+
 .battlefield-start {
     position: absolute;
     width: 100%;
     z-index: 101;
     margin-top: 25%
 }
+
 .battlefield-start-button__disabled {
     cursor: default !important;
     top: 0;
@@ -113,12 +123,14 @@ table {
     pointer-events: none
 }
 
-.battlefield-start-choose_rival-label{
-    position:relative;
+.battlefield-start-choose_rival-label {
+    position: relative;
 }
-.none{
-    display:none;
+
+.none {
+    display: none;
 }
+
 .notifications {
     margin: 10px auto;
     width: 400px;
@@ -136,24 +148,28 @@ table {
     position: relative;
     z-index: 0
 }
-.welcome{
-    text-align:center
 
+.welcome {
+    text-align: center
 }
-.welcome-text{
-    font-size:100px
+
+.welcome-text {
+    font-size: 100px
 }
-.welcome-image{
-    width:100px;
-    height:100px;
-    margin-bottom:50px;
+
+.welcome-image {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 50px;
 }
+
 #connectionIDtxt {
     width: 300px;
     text-align: center;
     display: inline-block;
     margin-bottom: 25px;
 }
+
 .battlefield-stat {
     position: absolute;
     top: 40px
@@ -164,8 +180,9 @@ table {
 }
 
 .battlefield__rival .battlefield-stat {
-    right: 20px
+    margin-left: 25em;
 }
+
 .ship-types {
     display: inline-block
 }
@@ -194,9 +211,35 @@ table {
 }
 
 .ship__killed .ship-part {
-    background: #ffaeae
+    background-color: red;
 }
 
 .ship-part:last-child {
     margin-right: 0
 }
+.battlefield-cell__missed__mark {
+    width: 5px;
+    height: 5px;
+    background: #737373;
+    /* position: absolute; */
+    border-radius: 50%;
+}
+
+.battlefield-cell__shoot__mark-rigthLine {
+    width: 40px;
+    height: 2px;
+    background: #fa0707;
+    transform: rotate(46deg);
+    position: absolute;
+}
+.battlefield-cell__shoot__mark-leftLine {
+    width: 40px;
+    height: 2px;
+    background: #fa0707;
+    position: absolute;
+    transform: rotate(314deg);
+}
+.ship-type ship-type__len_1 > .ship__killed{
+    background-color:red;
+}
+

@@ -1,4 +1,4 @@
-﻿@model DateViewModel
+﻿@model string
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,21 +20,13 @@
             <br />
             <input type="text" readonly id="connectionIDtxt" class="form-control" onclick="this.select();" /><br />
             <input type="button" value="Play" id="connectBtn" class="btn" />
-
-
         </div>
         <div class="row none" id="maincontainer">
             <div class="col-lg-5 battlefield battlefield__self battlefield__wait">
                 <div class="battlefield-gap">
                     <table class="battlefield-table" style="margin-left:105px;float:left">
                         <tbody>
-                            <tr class="battlefield-row">
-                                <td></td>
-                                @for (int i = 0; i < 10; i++)
-                                {
-                                    <td class="battlefield-cell battlefield-cell__box">@i</td>
-                                }
-                            </tr>
+
                             <tr>
                                 <td></td>
                                 @for (int i = 0; i < 10; i++)//1-10
@@ -50,7 +42,7 @@
                                     @for (int j = 0; j < GameCore.Field.Size; j++)
                                     {
                                         <td class="battlefield-cell battlefield-cell__empty">
-                                            <div class="battlefield-cell-content" data-y="@i" data-x="@j"></div>
+                                            <div class="battlefield-cell-content" data-y="@i" data-x="@j"><div></div></div>
                                         </td>
                                     }
                                 </tr>
@@ -61,7 +53,7 @@
 
                 </div>
 
-                @*<div class="battlefield-stat">
+                <div class="battlefield-stat none">
 
                     <div class="ship-types">
 
@@ -130,7 +122,7 @@
                                 </span>
                             </span>
 
-                            <span class="ship ship__killed" data-coords="5,9;5,8">
+                            <span class="ship">
 
                                 <span class="ship-part">
                                 </span>
@@ -167,7 +159,7 @@
                             </span>
                         </div>
                     </div>
-                </div>*@
+                </div>
             </div>
             <div class="col-lg-5 battlefield battlefield__rival battlefield__wait" id="enemy">
                 <div class="battlefield-gap">
@@ -188,7 +180,7 @@
                                     {
 
                                         <td class="battlefield-cell battlefield-cell__empty">
-                                            <div class="battlefield-cell-content" data-y="@i" data-x="@j"></div>
+                                            <div class="battlefield-cell-content" data-y="@i" data-x="@j"><div class=""></div></div>
                                         </td>
 
 
@@ -200,16 +192,123 @@
                     </table>
 
                 </div>
+                <div class="battlefield-stat none">
+
+                    <div class="ship-types">
+
+                        <div class="ship-type ship-type__len_4">
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+                        </div>
+
+                        <div class="ship-type ship-type__len_3">
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+                        </div>
+
+                        <div class="ship-type ship-type__len_2">
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+                        </div>
+
+                        <div class="ship-type ship-type__len_1">
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
             </div>
 
         </div>
 
 
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/signalr/signalr.min.js"></script>
-    <script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/signalr/signalr.min.js"></script>
+        <script>
     //Connect hub (SIGNALR Core....)
         //TODO CHANGE ALL JS SHITS IN JQUERY
         var _connectionId;
@@ -219,12 +318,14 @@
             if (Yes) {
                 $(".welcome").addClass("none");
                 $("#maincontainer").removeClass("none");
-                $(".battlefield__rival").removeClass("battlefield__wait").addClass("battlefield__start");
+                $(".battlefield-stat").removeClass("none");
+                $(".battlefield__rival").removeClass("battlefield__wait").addClass(".battlefield__start");
                 $(".notification").removeClass("none");
             } else {
                 $(".welcome").removeClass("none");
                 $("#maincontainer").addClass("none");
-                $(".battlefield__rival").addClass("battlefield__wait").removeClass("battlefield__start");
+                $(".battlefield-stat").addClass("none");
+                $(".battlefield__rival").addClass("battlefield__wait").removeClass(".battlefield__start");
                 $(".notification").addClass("none");
             }
         }
@@ -251,10 +352,11 @@
         function SetStatusColor(currentElement,value) {
             switch (value) {
                 case 2:
-                    currentElement.removeClass("battlefield-cell__empty").removeClass("battlefield-cell__busy").addClass("battlefield-cell__shoot");
+                    currentElement.removeClass("battlefield-cell__empty").removeClass("battlefield-cell__busy").addClass("battlefield-cell__shoot")
+                        .children().append("<div class='battlefield-cell__shoot__mark-leftLine'></div><div class='battlefield-cell__shoot__mark-rigthLine'></div>");
                     break;
                 case -1:
-                    currentElement.removeClass("battlefield-cell__empty").removeClass("battlefield-cell__busy").addClass("battlefield-cell__missed");
+                    currentElement.removeClass("battlefield-cell__empty").removeClass("battlefield-cell__busy").addClass("battlefield-cell__missed").children().children().addClass("battlefield-cell__missed__mark");
                     break;
                 case 0:
                     currentElement.removeClass("battlefield-cell__empty").removeClass("battlefield-cell__busy").addClass("battlefield-cell__empty");
@@ -285,44 +387,89 @@
             $("#notif_content").text(message);
         });
 
-        hubConnection.on("TakeStatus", function (_newField,currentTurn,message,win) {
-            let field = JSON.parse(_newField);//Get array[,]
-            for (var i = 0; i < 10; i++) {
-                for (var j = 0; j < 10; j++) {
-                    if (field[i][j] == -1 || field[i][j] == 2) {
-                        let currentElement = $(".battlefield__rival tr td.battlefield-cell .battlefield-cell-content[data-x='" +j + "'][data-y='" + i + "']");
-                        SetStatusColor(currentElement.parent(), field[i][j]);
+            hubConnection.on("TakeStatus", function (_newField, currentTurn, message, countKill, win) {
+                console.log("CountKill = " + countKill);
+                let field = JSON.parse(_newField);//Get array[,]
+                for (var i = 0; i < 10; i++) {
+                    for (var j = 0; j < 10; j++) {
+                        if (field[i][j] == -1 || field[i][j] == 2) {
+                            let currentElement = $(".battlefield__rival tr td.battlefield-cell .battlefield-cell-content[data-x='" +j + "'][data-y='" + i + "']");
+                            SetStatusColor(currentElement.parent(), field[i][j]);
+                        }
                     }
                 }
-            }
-            $("#notif_content").text(message);
-            YourTurn(currentTurn);
-            if (win) {
-                alert("You are Win");
-                    location.reload();
+                $("#notif_content").text(message);
+                YourTurn(currentTurn);
+                if (countKill != 0) {
+                    var mess = ".battlefield__rival .ship-types .ship-type__len_" + countKill + " .ship";
+                    $(mess).each(function () {
+                        var a;
+                        $(this).addClass(function (index, currentClass) {
+                            var addedClass="";
+                            console.log("CurrentClass" + currentClass);
+                            if (currentClass !="ship ship__killed") {
+                                addedClass = "ship__killed";
+                                a=true;
+                            }
+                            return addedClass;
+                        });
+                        console.log(a);
+                        if (a) {
 
-            }
-      });
+                            return false;
+                        }
 
-        hubConnection.on("SetStatus", function (_newField,currentTurn,message,win) {
-            let field = JSON.parse(_newField);//Get array[,]
-            for (var i = 0; i < 10; i++) {
-                for (var j = 0; j < 10; j++) {
-                    if (field[i][j] == -1 || field[i][j] == 2) {
-                        let currentElement = $(".battlefield__self tr td.battlefield-cell .battlefield-cell-content[data-x='" + j + "'][data-y='" + i + "']");
-                        SetStatusColor(currentElement.parent(), field[i][j]);
+                    });
+                }
+
+                if (win) {
+                    alert("You are Win");
+                        location.reload();
+                }
+
+          });
+
+            hubConnection.on("SetStatus", function (_newField, currentTurn, message, countKill, win) {
+                console.log("CountKill = " + countKill);
+                let field = JSON.parse(_newField);//Get array[,]
+                for (var i = 0; i < 10; i++) {
+                    for (var j = 0; j < 10; j++) {
+                        if (field[i][j] == -1 || field[i][j] == 2) {
+                            let currentElement = $(".battlefield__self tr td.battlefield-cell .battlefield-cell-content[data-x='" + j + "'][data-y='" + i + "']");
+                            SetStatusColor(currentElement.parent(), field[i][j]);
+                        }
                     }
                 }
-            }
-            YourTurn(currentTurn);
-            $("#notif_content").text(message);
-            if (win) {
-                alert("You are Loss");
-                    location.reload();
+                YourTurn(currentTurn);
+                $("#notif_content").text(message);
+                if (countKill != 0) {
+                    var mess = ".battlefield__self .ship-types .ship-type__len_" + countKill + " .ship";
+                    $(mess).each(function () {
+                        var a = 0;
+                        $(this).addClass(function (index, currentClass) {
+                            var addedClass = "";
+                            console.log("CurrentClass" + currentClass);
+                            if (currentClass != "ship ship__killed") {
+                                addedClass = "ship__killed";
+                                a++;
+                            }
+                            return addedClass;
+                        });
+                        console.log(a);
+                        if (a == countKill) {
+
+                            return false;
+                        }
+
+                    });
                 }
+                if (win) {
+                    alert("You are Loss");
+                        location.reload();
+                    }
 
 
-        });
+            });
         hubConnection.on("StartGame", function (_newField, connectionId) {
             let field = JSON.parse(_newField);
             for (var i = 0; i < 10; i++) {
@@ -351,10 +498,10 @@
         hubConnection.start();
         hubConnection.serverTimeoutInMilliseconds = 100000;//100 second
             window.onload = function () {
-                @if (Model.ConnectionID!=null)
+                @if (Model!=null)
                 {
                 <text>
-                _connectionId = @Model.ConnectionID;
+                _connectionId = @Model;
                 </text>
             }
             else
@@ -370,6 +517,6 @@
             }
             //setTimeout(ConnectWithExistGroup, 500);//SetTimeout->For First ConnectHub... tick tack... Second->ConnectGroup
 
-    </script>
+        </script>
 </body>
 </html>

@@ -15,10 +15,8 @@ namespace SeaBattle.Controllers
 
         public IActionResult Index(string id = null)
         {
-            Field field = new Field();
-            field.SetRandomShips();
-            DateViewModel model = new DateViewModel { fieldPlayer = field.Plans, ConnectionID = id };
-            return View(model);
+          
+            return View((object)id);
         }
 
 

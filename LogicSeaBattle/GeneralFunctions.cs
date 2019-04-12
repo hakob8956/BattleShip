@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
 namespace GameCore
 {
     public class GeneralFunctions
@@ -25,17 +24,19 @@ namespace GameCore
             return value;
         }
 
-        public int[,] Shoot(int[,] field, int x, int y)//return fieldType
+        public (int[,], int) Shoot(int[,] field, int x, int y)//return fieldType
         {
-
+            int countKill = 0;
             if (Field.CheckLocation(x, y))
             {
+
                 Field.ArroundCords arround = new Field.ArroundCords(x, y);
                 int dirX = 0, dirY = 0;
                 int value = GetValue(field[y, x]);//Get current Value
                 field[y, x] = value;
                 if (value == (int)FieldType.Shooted)
                 {
+                    
                     int statusShip = 1;
 
                     for (int i = 0; i < 8; i++)
@@ -57,6 +58,7 @@ namespace GameCore
                     }
                     if (statusShip == 1)//OnDecker
                     {
+                        countKill++;
                         for (int i = 0; i < 8; i++)
                         {
                             if (Field.CheckLocation(arround.xx[i], arround.yy[i]))
@@ -78,16 +80,19 @@ namespace GameCore
                     }
                     else if (statusShip == 3)//last ship
                     {
+
                         int XD = x - dirX;
                         int YD = y - dirY;
-                        while (Field.CheckLocation(x,y) && field[y,x]==(int)FieldType.Shooted)
+                        countKill = 0;
+                        while (Field.CheckLocation(x, y) && field[y, x] == (int)FieldType.Shooted)
                         {
-                            arround = new Field.ArroundCords(x,y);
+                            countKill++;
+                            arround = new Field.ArroundCords(x, y);
                             for (int i = 0; i < 8; i++)
                             {
-                                if (Field.CheckLocation(arround.xx[i],arround.yy[i]))
+                                if (Field.CheckLocation(arround.xx[i], arround.yy[i]))
                                 {
-                                    if (field[arround.yy[i],arround.xx[i]]==(int)FieldType.Empty)
+                                    if (field[arround.yy[i], arround.xx[i]] == (int)FieldType.Empty)
                                     {
                                         field[arround.yy[i], arround.xx[i]] = (int)FieldType.Missed;
                                     }
@@ -96,13 +101,13 @@ namespace GameCore
                             x -= XD;
                             y -= YD;
                         }
-                        
+
 
                     }
                 }
 
             }
-            return field;
+            return (field, countKill);
         }
 
 

@@ -66,7 +66,8 @@ namespace SeaBattle
                 var anotherConnectionId = userRepo.FirstOrDefault(p => p.Value.connectionId == connectionId && p.Key != Context.ConnectionId).Key;
 
                 var enemyfield = userRepo[anotherConnectionId].field;//Take EnemyField
-                var newEnemyField = GeneralFunctions.Shoot(enemyfield, x, y);//Set new EnemyField
+                var (newEnemyField, countKill) =  GeneralFunctions.Shoot(enemyfield, x, y);//Set new EnemyField
+
                 bool win = GeneralFunctions.Win(newEnemyField);
                 var jsonNewField = JsonConvert.SerializeObject(newEnemyField);
 
@@ -81,8 +82,8 @@ namespace SeaBattle
                 //TODO FIX WIN
                 string message1 = userGroupRepo[connectionId].currentTurn ? "Your turn." : "Opponent's turn, please wait.";
                 string message2 = !userGroupRepo[connectionId].currentTurn ? "Your turn." : "Opponent's turn, please wait.";
-                await Clients.GroupExcept(connectionId,anotherConnectionId).SendAsync("TakeStatus", jsonNewField, userGroupRepo[connectionId].currentTurn, message1, win);
-                await Clients.OthersInGroup(connectionId).SendAsync("SetStatus", jsonNewField, !userGroupRepo[connectionId].currentTurn, message2,win);//Send current User
+                await Clients.GroupExcept(connectionId,anotherConnectionId).SendAsync("TakeStatus", jsonNewField, userGroupRepo[connectionId].currentTurn, message1,countKill, win);
+                await Clients.OthersInGroup(connectionId).SendAsync("SetStatus", jsonNewField, !userGroupRepo[connectionId].currentTurn, message2,countKill,win);//Send current User
             }
 
 
