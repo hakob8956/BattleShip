@@ -14,39 +14,176 @@
             <div class="col-md-3"><div class="notification none" style="text-align:center" id="notif_content"></div></div>
             <div class="col-md-4"></div>
         </div>
-        <div class="row">
+        <div class="welcome">
+            <span class="welcome-text">Sea Battles</span>
+            <img src="~/img/welcome.png" class="welcome-image" />
+            <br />
+            <input type="text" readonly id="connectionIDtxt" class="form-control" onclick="this.select();" /><br />
+            <input type="button" value="Play" id="connectBtn" class="btn" />
+
+
+        </div>
+        <div class="row none" id="maincontainer">
             <div class="col-lg-5 battlefield battlefield__self battlefield__wait">
                 <div class="battlefield-gap">
                     <table class="battlefield-table" style="margin-left:105px;float:left">
                         <tbody>
-
+                            <tr class="battlefield-row">
+                                <td></td>
+                                @for (int i = 0; i < 10; i++)
+                                {
+                                    <td class="battlefield-cell battlefield-cell__box">@i</td>
+                                }
+                            </tr>
+                            <tr>
+                                <td></td>
+                                @for (int i = 0; i < 10; i++)//1-10
+                                {
+                                    <td style="text-align:center">@Convert.ToChar(i + 65)</td>
+                                }
+                            </tr>
                             @for (int i = 0; i < GameCore.Field.Size; i++)
                             {
+
                                 <tr class="battlefield-row">
+                                    <td>@Convert.ToInt32(i + 1)</td>
                                     @for (int j = 0; j < GameCore.Field.Size; j++)
                                     {
-                                            <td class="battlefield-cell battlefield-cell__empty">
-                                                <div class="battlefield-cell-content" data-y="@i" data-x="@j"></div>
-                                            </td>                                                                             
+                                        <td class="battlefield-cell battlefield-cell__empty">
+                                            <div class="battlefield-cell-content" data-y="@i" data-x="@j"></div>
+                                        </td>
                                     }
                                 </tr>
                             }
 
                         </tbody>
                     </table>
-                    <div class="battlefield-start" style="right:-50%">
-                        <div class="battlefield-start-choose_rival-label text-info">SeaBattle</div>
 
-                    </div>
                 </div>
+
+                @*<div class="battlefield-stat">
+
+                    <div class="ship-types">
+
+                        <div class="ship-type ship-type__len_4">
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+                        </div>
+
+                        <div class="ship-type ship-type__len_3">
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+                        </div>
+
+                        <div class="ship-type ship-type__len_2">
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship ship__killed" data-coords="5,9;5,8">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+                        </div>
+
+                        <div class="ship-type ship-type__len_1">
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>*@
             </div>
             <div class="col-lg-5 battlefield battlefield__rival battlefield__wait" id="enemy">
                 <div class="battlefield-gap">
                     <table class="battlefield-table" style="margin-right:105px;float:right">
                         <tbody>
+                            <tr>
+                                <td></td>
+                                @for (int i = 0; i < 10; i++)//1-10
+                                {
+                                    <td style="text-align:center">@Convert.ToChar(i + 65)</td>
+                                }
+                            </tr>
                             @for (int i = 0; i < GameCore.Field.Size; i++)
                             {
                                 <tr class="battlefield-row">
+                                    <td>@Convert.ToInt32(i + 1)</td>
                                     @for (int j = 0; j < GameCore.Field.Size; j++)
                                     {
 
@@ -54,22 +191,21 @@
                                             <div class="battlefield-cell-content" data-y="@i" data-x="@j"></div>
                                         </td>
 
+
                                     }
                                 </tr>
                             }
                         </tbody>
 
                     </table>
-                    <div class="battlefield-start">
-                        <div class="battlefield-start-choose_rival-label"><input type="text" readonly id="connectionIDtxt" class="form-control" onclick="this.select();" style="width:75%" /></div><br />
-                        <div class="battlefield-start-choose_rival-label"><input type="button" value="Play" id="connectBtn" class="btn" /></div>
-                    </div>
+
                 </div>
 
             </div>
 
         </div>
-    </div>
+
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/signalr/signalr.min.js"></script>
@@ -77,14 +213,19 @@
     //Connect hub (SIGNALR Core....)
         //TODO CHANGE ALL JS SHITS IN JQUERY
         var _connectionId;
+
+
         function ReadyStart(Yes) {
             if (Yes) {
-                $(".battlefield-start").addClass("none");
+                $(".welcome").addClass("none");
+                $("#maincontainer").removeClass("none");
                 $(".battlefield__rival").removeClass("battlefield__wait").addClass("battlefield__start");
                 $(".notification").removeClass("none");
             } else {
-                $(".battlefield-start").removeClass("none");
+                $(".welcome").removeClass("none");
+                $("#maincontainer").addClass("none");
                 $(".battlefield__rival").addClass("battlefield__wait").removeClass("battlefield__start");
+                $(".notification").addClass("none");
             }
         }
         function YourTurn(Yes) {
@@ -157,11 +298,13 @@
             $("#notif_content").text(message);
             YourTurn(currentTurn);
             if (win) {
-                alert("You Win");
+                alert("You are Win");
+                    location.reload();
+
             }
       });
 
-        hubConnection.on("SetStatus", function (_newField,currentTurn,message) {
+        hubConnection.on("SetStatus", function (_newField,currentTurn,message,win) {
             let field = JSON.parse(_newField);//Get array[,]
             for (var i = 0; i < 10; i++) {
                 for (var j = 0; j < 10; j++) {
@@ -173,6 +316,12 @@
             }
             YourTurn(currentTurn);
             $("#notif_content").text(message);
+            if (win) {
+                alert("You are Loss");
+                    location.reload();
+                }
+
+
         });
         hubConnection.on("StartGame", function (_newField, connectionId) {
             let field = JSON.parse(_newField);

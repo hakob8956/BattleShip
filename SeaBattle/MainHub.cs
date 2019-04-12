@@ -82,7 +82,7 @@ namespace SeaBattle
                 string message1 = userGroupRepo[connectionId].currentTurn ? "Your turn." : "Opponent's turn, please wait.";
                 string message2 = !userGroupRepo[connectionId].currentTurn ? "Your turn." : "Opponent's turn, please wait.";
                 await Clients.GroupExcept(connectionId,anotherConnectionId).SendAsync("TakeStatus", jsonNewField, userGroupRepo[connectionId].currentTurn, message1, win);
-                await Clients.OthersInGroup(connectionId).SendAsync("SetStatus", jsonNewField, !userGroupRepo[connectionId].currentTurn, message2);//Send current User
+                await Clients.OthersInGroup(connectionId).SendAsync("SetStatus", jsonNewField, !userGroupRepo[connectionId].currentTurn, message2,win);//Send current User
             }
 
 

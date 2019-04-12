@@ -136,3 +136,67 @@ table {
     position: relative;
     z-index: 0
 }
+.welcome{
+    text-align:center
+
+}
+.welcome-text{
+    font-size:100px
+}
+.welcome-image{
+    width:100px;
+    height:100px;
+    margin-bottom:50px;
+}
+#connectionIDtxt {
+    width: 300px;
+    text-align: center;
+    display: inline-block;
+    margin-bottom: 25px;
+}
+.battlefield-stat {
+    position: absolute;
+    top: 40px
+}
+
+.battlefield__self .battlefield-stat {
+    left: 20px
+}
+
+.battlefield__rival .battlefield-stat {
+    right: 20px
+}
+.ship-types {
+    display: inline-block
+}
+
+.ship-type {
+    overflow: hidden
+}
+
+.ship {
+    margin: 0 7px 13px 0;
+    display: block;
+    float: left
+}
+
+    .ship:last-child {
+        margin-right: 0
+    }
+
+.ship-part {
+    width: 7px;
+    height: 7px;
+    margin: 0 1px 0 0;
+    background: #c5c5ff;
+    display: block;
+    float: left
+}
+
+.ship__killed .ship-part {
+    background: #ffaeae
+}
+
+.ship-part:last-child {
+    margin-right: 0
+}
