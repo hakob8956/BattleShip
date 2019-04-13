@@ -32,11 +32,12 @@ namespace GameCore
 
                 Field.ArroundCords arround = new Field.ArroundCords(x, y);
                 int dirX = 0, dirY = 0;
+                int XD = 0, YD = 0;
                 int value = GetValue(field[y, x]);//Get current Value
                 field[y, x] = value;
                 if (value == (int)FieldType.Shooted)
                 {
-                    
+
                     int statusShip = 1;
 
                     for (int i = 0; i < 8; i++)
@@ -56,9 +57,17 @@ namespace GameCore
                             }
                         }
                     }
+
+                    if (statusShip == 3)
+                    {
+                        XD = x - dirX;
+                        YD = y - dirY;
+                        statusShip = CheckHurtShip(field, x, y, XD, YD) ? 2 : 3;
+                    }
+
                     if (statusShip == 1)//OnDecker
                     {
-                        countKill++;
+                        countKill = 1;
                         for (int i = 0; i < 8; i++)
                         {
                             if (Field.CheckLocation(arround.xx[i], arround.yy[i]))
@@ -80,14 +89,13 @@ namespace GameCore
                     }
                     else if (statusShip == 3)//last ship
                     {
-
-                        int XD = x - dirX;
-                        int YD = y - dirY;
                         countKill = 0;
-                        while (Field.CheckLocation(x, y) && field[y, x] == (int)FieldType.Shooted)
+                        int x1 = x, y1 = y;
+                        //#1
+                        while (Field.CheckLocation(x1, y1) && field[y1, x1] == (int)FieldType.Shooted)
                         {
                             countKill++;
-                            arround = new Field.ArroundCords(x, y);
+                            arround = new Field.ArroundCords(x1, y1);
                             for (int i = 0; i < 8; i++)
                             {
                                 if (Field.CheckLocation(arround.xx[i], arround.yy[i]))
@@ -98,10 +106,30 @@ namespace GameCore
                                     }
                                 }
                             }
-                            x -= XD;
-                            y -= YD;
+                            x1 -= XD;
+                            y1 -= YD;
                         }
-
+                        x1 = x;
+                        y1 = y;
+                        //#2
+                        countKill--;
+                        while (Field.CheckLocation(x1, y1) && field[y1, x1] == (int)FieldType.Shooted)
+                        {
+                            countKill++;
+                            arround = new Field.ArroundCords(x1, y1);
+                            for (int i = 0; i < 8; i++)
+                            {
+                                if (Field.CheckLocation(arround.xx[i], arround.yy[i]))
+                                {
+                                    if (field[arround.yy[i], arround.xx[i]] == (int)FieldType.Empty)
+                                    {
+                                        field[arround.yy[i], arround.xx[i]] = (int)FieldType.Missed;
+                                    }
+                                }
+                            }
+                            x1 += XD;
+                            y1 += YD;
+                        }
 
                     }
                 }
@@ -110,7 +138,23 @@ namespace GameCore
             return (field, countKill);
         }
 
+        public bool CheckHurtShip(int[,] field, int x, int y, int XD, int YD)
+        {
+            while (Field.CheckLocation(x, y) && field[y, x] == (int)FieldType.Shooted)
+            {
+                x -= XD;
+                y -= YD;
+            }
+            if (Field.CheckLocation(y, x))
+            {
+                if (field[y, x] == (int)FieldType.Used)
+                {
+                    return true;
+                }
+            }
 
+            return false;
+        }
         public bool Win(int[,] field)
         {
             for (int i = 0; i < Field.Size; i++)

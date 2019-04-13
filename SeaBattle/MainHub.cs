@@ -28,8 +28,9 @@ namespace SeaBattle
                 Random rnd = new Random();
                 connectionId = Convert.ToString(rnd.Next(10000000, 99999999));//GENERATE UNIQ ID
                 await Groups.AddToGroupAsync(Context.ConnectionId, connectionId);
-                await Clients.Group(connectionId).SendAsync("Notify", $"Waiting for opponent");
                 await Clients.Group(connectionId).SendAsync("GetConnectionID", connectionId);
+
+                await Clients.Group(connectionId).SendAsync("Notify", $"Waiting for opponent");
             }
             else
             {
@@ -98,11 +99,11 @@ namespace SeaBattle
         {
             string groupname = userRepo.FirstOrDefault(p => p.Key == Context.ConnectionId).Value.connectionId;//take user groupname(connectionId)
             string anotheruserId = userRepo.FirstOrDefault(p => p.Value.connectionId == groupname && p.Key != Context.ConnectionId).Key;//Take another ClientId      
-            foreach (var item in userRepo.Where(p => p.Value.connectionId == groupname))//disconnect all members in group
-            {
-                Groups.RemoveFromGroupAsync(item.Key, groupname);
-                Clients.Client(item.Key).SendAsync("Disconnect");
-            }
+            //foreach (var item in userRepo.Where(p => p.Value.connectionId == groupname))//disconnect all members in group
+            //{
+            //    Groups.RemoveFromGroupAsync(item.Key, groupname);
+            //    Clients.Client(item.Key).SendAsync("Disconnect");
+            //}
             if (anotheruserId != null) userRepo.Remove(anotheruserId);
             userRepo.Remove(Context.ConnectionId);    
             userGroupRepo.Remove(groupname);

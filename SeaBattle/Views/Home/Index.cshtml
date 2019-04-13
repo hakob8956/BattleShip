@@ -312,11 +312,11 @@
         <script>
 
         //TODO CHANGE ALL JS SHITS IN JQUERY
-        var _connectionId;
+            var _connectionId;
             window.onload = function () {
             @if (Model != null) {
                 <text>
-                    _connectionId = @Model;
+                   _connectionId = @Model;
                  </text>
             }
             else {
@@ -326,7 +326,7 @@
             }
 
             let textBox = $("#connectionIDtxt");
-            textBox.attr("value", changeurl(_connectionId));//changeurl and return new url to value TextBox
+            textBox.attr("value", changeurl(_connectionId));
             textBox.attr("data-value", _connectionId);
             }
          

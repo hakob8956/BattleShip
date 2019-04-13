@@ -28,16 +28,18 @@ hubConnection.on("TakeStatus", function (_newField, currentTurn, message, countK
             $(this).addClass(function (index, currentClass) {
                 var addedClass = "";
                 console.log("CurrentClass" + currentClass);
-                if (currentClass !== "ship ship__killed") {
+                if (currentClass !== "ship ship__killed") {                  
                     addedClass = "ship__killed";
                     a = true;
                 }
                 return addedClass;
             });
-            console.log(a);
+         
             if (a) {
+
                 return false;
             }
+
         });
     }
     if (win) {
@@ -89,6 +91,7 @@ hubConnection.on("SetStatus", function (_newField, currentTurn, message, countKi
 
 });
 hubConnection.on("StartGame", function (_newField, connectionId) {
+    _connectionId = connectionId;
     let field = JSON.parse(_newField);
     for (var i = 0; i < 10; i++) {
         for (var j = 0; j < 10; j++) {
@@ -106,12 +109,17 @@ hubConnection.on("ChangeTurn", function (YesOrNo) {
 });
 
 document.getElementById("connectBtn").addEventListener("click", function (e) {
+
     $(".notification").removeClass("none");
     hubConnection.invoke("Enter", _connectionId);
 
 });
 hubConnection.on("GetConnectionID", function (connectionID) {
-    console.log("ID: " + connectionID);
+    _connectionId = connectionID;
+    console.log("GetConnectionID = " + connectionID);
+    let textBox = $("#connectionIDtxt");
+    textBox.attr("value", changeurl(connectionID));
+    textBox.attr("data-value", connectionID);
 });
 hubConnection.on("Disconnect", function (connectionID) {
     alert("Your enemy left");
