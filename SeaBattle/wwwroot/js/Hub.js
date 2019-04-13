@@ -43,7 +43,7 @@ hubConnection.on("TakeStatus", function (_newField, currentTurn, message, countK
         });
     }
     if (win) {
-        alert("You  Win");
+        swal("You Win", "","info");
         location.reload();
     }
 
@@ -84,7 +84,7 @@ hubConnection.on("SetStatus", function (_newField, currentTurn, message, countKi
         });
     }
     if (win) {
-        alert("You  Loss");
+        swal("You loss", "info");
         location.reload();
     }
 
@@ -122,11 +122,10 @@ hubConnection.on("GetConnectionID", function (connectionID) {
     textBox.attr("data-value", connectionID);
 });
 hubConnection.on("Disconnect", function (connectionID) {
-    alert("Your enemy left");
+    swal("Your opponent has left the game.","","info");
     window.location.reload();
 });
 hubConnection.onclose(function (e) {
-    alert('Connection Close');
     window.location.reload();
 });
 

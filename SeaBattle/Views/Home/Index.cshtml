@@ -5,7 +5,11 @@
     <title>Sea Battle</title>
     <link rel="stylesheet" asp-href-include="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" asp-href-include="~/css/site.css" />
+    <link rel="stylesheet" asp-href-include="~/lib/jquery-UI/jquery-ui.css" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-UI/jquery-ui.min.js"></script>
+    <script src="~/lib/sweatalern/sweetalert.min.js"></script>
+
 </head>
 <body>
     <div class="container-fluid" style="margin-top:50px">
@@ -53,113 +57,92 @@
 
                 </div>
 
-                <div class="battlefield-stat none">
 
-                    <div class="ship-types">
 
-                        <div class="ship-type ship-type__len_4">
+                @*<div class="port" style="margin-left:90px">
 
-                            <span class="ship">
 
-                                <span class="ship-part">
-                                </span>
+                    <div class="port-instruction">
+                        Перетащите на поле и кликните, чтобы повернуть:
+                    </div>
 
-                                <span class="ship-part">
-                                </span>
 
-                                <span class="ship-part">
-                                </span>
+                    <div class="port-lines">
 
-                                <span class="ship-part">
-                                </span>
-                            </span>
+                        <div class="port-line clearfix">
+
+                            <div class="port-ship" style="width: 8em; height: 2em; padding-right: 3px; padding-bottom: 0px;">
+
+                                <div data-id="L73iBCHFCvXp" data-length="4" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 8em; height: 2em; padding-right: 3px; padding-bottom: 0px;">
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="ship-type ship-type__len_3">
+                        <div class="port-line clearfix">
 
-                            <span class="ship">
+                            <div class="port-ship" style="width: 6em; height: 2em; padding-right: 2px; padding-bottom: 0px;">
 
-                                <span class="ship-part">
-                                </span>
+                                <div data-id="JjAlE0g5lmNp" data-length="3" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 6em; height: 2em; padding-right: 2px; padding-bottom: 0px;">
+                                </div>
+                            </div>
 
-                                <span class="ship-part">
-                                </span>
+                            <div class="port-ship" style="width: 6em; height: 2em; padding-right: 2px; padding-bottom: 0px;">
 
-                                <span class="ship-part">
-                                </span>
-                            </span>
-
-                            <span class="ship">
-
-                                <span class="ship-part">
-                                </span>
-
-                                <span class="ship-part">
-                                </span>
-
-                                <span class="ship-part">
-                                </span>
-                            </span>
+                                <div data-id="sLAQBIVM2atk" data-length="3" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 6em; height: 2em; padding-right: 2px; padding-bottom: 0px;">
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="ship-type ship-type__len_2">
+                        <div class="port-line clearfix">
 
-                            <span class="ship">
+                            <div class="port-ship" style="width: 4em; height: 2em; padding-right: 1px; padding-bottom: 0px;">
 
-                                <span class="ship-part">
-                                </span>
+                                <div data-id="4szl5bkBBuVg" data-length="2" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 4em; height: 2em; padding-right: 1px; padding-bottom: 0px;">
+                                </div>
+                            </div>
 
-                                <span class="ship-part">
-                                </span>
-                            </span>
+                            <div class="port-ship" style="width: 4em; height: 2em; padding-right: 1px; padding-bottom: 0px;">
 
-                            <span class="ship">
+                                <div data-id="zK96LJtAFJrg" data-length="2" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 4em; height: 2em; padding-right: 1px; padding-bottom: 0px;">
+                                </div>
+                            </div>
 
-                                <span class="ship-part">
-                                </span>
+                            <div class="port-ship" style="width: 4em; height: 2em; padding-right: 1px; padding-bottom: 0px;">
 
-                                <span class="ship-part">
-                                </span>
-                            </span>
-
-                            <span class="ship">
-
-                                <span class="ship-part">
-                                </span>
-
-                                <span class="ship-part">
-                                </span>
-                            </span>
+                                <div data-id="eXqSUbCo7r6k" data-length="2" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 4em; height: 2em; padding-right: 1px; padding-bottom: 0px;">
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="ship-type ship-type__len_1">
+                        <div class="port-line clearfix">
 
-                            <span class="ship">
+                            <div class="port-ship" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
 
-                                <span class="ship-part">
-                                </span>
-                            </span>
+                                <div data-id="QpLVoIYmoYEu" data-length="1" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
+                                </div>
+                            </div>
 
-                            <span class="ship">
+                            <div class="port-ship" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
 
-                                <span class="ship-part">
-                                </span>
-                            </span>
+                                <div data-id="pTZT3tDOOyMo" data-length="1" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
+                                </div>
+                            </div>
 
-                            <span class="ship">
+                            <div class="port-ship" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
 
-                                <span class="ship-part">
-                                </span>
-                            </span>
+                                <div data-id="KqNebfDYepNY" data-length="1" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
+                                </div>
+                            </div>
 
-                            <span class="ship">
+                            <div class="port-ship" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
 
-                                <span class="ship-part">
-                                </span>
-                            </span>
+                                <div data-id="igt39meeM2K6" data-length="1" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                </div>*@
             </div>
             <div class="col-lg-5 battlefield battlefield__rival battlefield__wait" id="enemy">
                 <div class="battlefield-gap">
@@ -305,13 +288,13 @@
         </div>
 
         <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
         <script src="~/lib/signalr/signalr.min.js"></script>
         <script src="~/js/Hub.js"></script> <!--Connect hub (SIGNALR Core....)-->
         <script src="~/js/site.js"></script><!-- Connect site.js (functions)-->
+
         <script>
 
-        //TODO CHANGE ALL JS SHITS IN JQUERY
             var _connectionId;
             window.onload = function () {
             @if (Model != null) {
@@ -329,8 +312,20 @@
             textBox.attr("value", changeurl(_connectionId));
             textBox.attr("data-value", _connectionId);
             }
-         
-     
+
+            $(function () {
+                $(".ship-box").draggable();
+                $(".battlefield-table").droppable({
+                    drop: function (event, ui) {
+                        $(this)
+                            .addClass("ui-state-highlight")
+                            .find("p")
+                            .html("Dropped!");
+                    }
+                });
+            });
+
+
         </script>
 </body>
 </html>

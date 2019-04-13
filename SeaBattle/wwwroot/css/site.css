@@ -242,3 +242,70 @@ table {
 .ship-type ship-type__len_1 > .ship__killed {
     background-color: red;
 }
+
+.port {
+    width: 350px;
+    margin-left: 2em;
+    position: absolute !important;
+    top: 0;
+    left: 0
+}
+
+.port-instruction {
+    font-size: .8em;
+    margin-bottom: 2em;
+    margin-right: 2em;
+    line-height: 1.4
+}
+
+.port-lines {
+    position: relative;
+    top: -1.26em;
+    left: -.7em;
+    margin-left: 1px
+}
+
+.port-line {
+    position: relative;
+    margin: 0
+}
+
+.port-ship {
+    position: relative;
+    margin: 1.26em .7em;
+    float: left;
+    border: 1px dotted #b2b2b9
+}
+ship-box {
+    z-index: 2;
+    left: 0;
+    top: 0;
+    border: 2px solid #00f;
+    background: rgba(0,0,255,.05);
+    position: absolute !important;
+    margin: -2px
+}
+
+.battlefield-cell__done .ship-box {
+    border-color: red;
+    background: rgba(255,0,0,.05)
+}
+
+.ship-box__placeholder {
+    border-color: #40bf44;
+    background: rgba(64,191,68,.05)
+}
+
+.ship-box__placeholder_error {
+    border-color: red !important;
+    background: rgba(255,255,0,.05) !important
+}
+
+.ship-box__transparent {
+    visibility: hidden
+}
+
+.battlefield-table-placeholder {
+    min-height: 340px;
+    min-width: 340px
+}
