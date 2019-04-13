@@ -239,7 +239,6 @@ table {
     position: absolute;
     transform: rotate(314deg);
 }
-.ship-type ship-type__len_1 > .ship__killed{
-    background-color:red;
+.ship-type ship-type__len_1 > .ship__killed {
+    background-color: red;
 }
-

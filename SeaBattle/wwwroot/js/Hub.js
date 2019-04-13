@@ -1,55 +1,123 @@
-﻿
-function changeurl(connectionID) {
-    var new_url = "https://localhost:44333/id" + connectionID;
-    window.history.pushState("data", "Title", new_url);
-
-
-}
-const hubConnection = new signalR.HubConnectionBuilder()
+﻿const hubConnection = new signalR.HubConnectionBuilder()
     .withUrl("/seabattle")
     .build();
-let userName = "";
-// получение сообщения от сервера
-hubConnection.on("Receive", function (message, userName, connectionID) {
 
-    // создаем элемент <b> для имени пользователя
-    let userNameElem = document.createElement("b");
-    userNameElem.appendChild(document.createTextNode(userName + ": "));
 
-    // создает элемент <p> для сообщения пользователя
-    let elem = document.createElement("p");
-    elem.appendChild(userNameElem);
-    elem.appendChild(document.createTextNode(message));
-    a
-    var firstElem = document.getElementById("chatroom").firstChild;
-    document.getElementById("chatroom").insertBefore(elem, firstElem);
-
-});
-
-// диагностическое сообщение
 hubConnection.on("Notify", function (message) {
-
-    let elem = document.createElement("p");
-    elem.appendChild(document.createTextNode(message));
-
-    var firstElem = document.getElementById("chatroom").firstChild;
-    document.getElementById("chatroom").insertBefore(elem, firstElem);
+    console.log(message);
+    $("#notif_content").text(message);
 });
 
-// установка имени пользователя
-document.getElementById("loginBtn").addEventListener("click", function (e) {
-    hubConnection.invoke("Enter", "");
+hubConnection.on("TakeStatus", function (_newField, currentTurn, message, countKill, win) {
+    console.log("CountKill = " + countKill);
+    let field = JSON.parse(_newField);//Get array[,]
+    for (var i = 0; i < 10; i++) {
+        for (var j = 0; j < 10; j++) {
+            if (field[i][j] === -1 || field[i][j] === 2) {
+                let currentElement = $(".battlefield__rival tr td.battlefield-cell .battlefield-cell-content[data-x='" + j + "'][data-y='" + i + "']");
+                SetStatusColor(currentElement.parent(), field[i][j]);
+            }
+        }
+    }
+    $("#notif_content").text(message);
+    YourTurn(currentTurn);
+    if (countKill !== 0) {
+        var mess = ".battlefield__rival .ship-types .ship-type__len_" + countKill + " .ship";
+        $(mess).each(function () {
+            var a;
+            $(this).addClass(function (index, currentClass) {
+                var addedClass = "";
+                console.log("CurrentClass" + currentClass);
+                if (currentClass !== "ship ship__killed") {
+                    addedClass = "ship__killed";
+                    a = true;
+                }
+                return addedClass;
+            });
+            console.log(a);
+            if (a) {
+                return false;
+            }
+        });
+    }
+    if (win) {
+        alert("You  Win");
+        location.reload();
+    }
+
+});
+
+hubConnection.on("SetStatus", function (_newField, currentTurn, message, countKill, win) {
+    console.log("CountKill = " + countKill);
+    let field = JSON.parse(_newField);//Get array[,]
+    for (var i = 0; i < 10; i++) {
+        for (var j = 0; j < 10; j++) {
+            if (field[i][j] === -1 || field[i][j] === 2) {
+                let currentElement = $(".battlefield__self tr td.battlefield-cell .battlefield-cell-content[data-x='" + j + "'][data-y='" + i + "']");
+                SetStatusColor(currentElement.parent(), field[i][j]);
+            }
+        }
+    }
+    YourTurn(currentTurn);
+    $("#notif_content").text(message);
+    if (countKill !== 0) {
+        var mess = ".battlefield__self .ship-types .ship-type__len_" + countKill + " .ship";
+        $(mess).each(function () {
+            var a;
+            $(this).addClass(function (index, currentClass) {
+                var addedClass = "";
+                console.log("CurrentClass" + currentClass);
+                if (currentClass !== "ship ship__killed") {
+                    addedClass = "ship__killed";
+                    a=true;
+                }
+                return addedClass;
+            });
+            console.log(a);
+            if (a) {
+
+                return false;
+            }
+
+        });
+    }
+    if (win) {
+        alert("You  Loss");
+        location.reload();
+    }
+
+
+});
+hubConnection.on("StartGame", function (_newField, connectionId) {
+    let field = JSON.parse(_newField);
+    for (var i = 0; i < 10; i++) {
+        for (var j = 0; j < 10; j++) {
+            let currentElement = $(".battlefield__self tr td.battlefield-cell .battlefield-cell-content[data-x='" + j + "'][data-y='" + i + "']");
+            SetStatusColor(currentElement.parent(), field[i][j]);
+        }
+    }
+    ReadyStart(true);
+    YourTurn(false);
+
+
+});
+hubConnection.on("ChangeTurn", function (YesOrNo) {
+    YourTurn(YesOrNo);
+});
+
+document.getElementById("connectBtn").addEventListener("click", function (e) {
+    $(".notification").removeClass("none");
+    hubConnection.invoke("Enter", _connectionId);
 
 });
 hubConnection.on("GetConnectionID", function (connectionID) {
     console.log("ID: " + connectionID);
-    changeurl(connectionID);
 });
-// отправка сообщения на сервер
-document.getElementById("sendBtn").addEventListener("click", function (e) {
-    let message = document.getElementById("message").value;
 
-    hubConnection.invoke("Send", message, userName);
-});
+
 
 hubConnection.start();
+
+hubConnection.serverTimeoutInMilliseconds = 100000;//100 second
+
+
