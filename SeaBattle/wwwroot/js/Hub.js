@@ -113,7 +113,14 @@ document.getElementById("connectBtn").addEventListener("click", function (e) {
 hubConnection.on("GetConnectionID", function (connectionID) {
     console.log("ID: " + connectionID);
 });
-
+hubConnection.on("Disconnect", function (connectionID) {
+    alert("Your enemy left");
+    window.location.reload();
+});
+hubConnection.onclose(function (e) {
+    alert('Connection Close');
+    window.location.reload();
+});
 
 
 hubConnection.start();

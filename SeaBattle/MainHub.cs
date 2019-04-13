@@ -13,7 +13,7 @@ namespace SeaBattle
     public class MainHub : Hub
     {
      
-        private static Dictionary<string, ConnectionModel> userRepo = new Dictionary<string, ConnectionModel>();//ClientId,ConnectionModel(id,field)
+        private static Dictionary<string, ConnectionModel> userRepo = new Dictionary<string, ConnectionModel>();//ClientId,ConnectionModel(groupId,field)
         private static Dictionary<string, SortStepModel> userGroupRepo = new Dictionary<string, SortStepModel>();//connectionId(groupId),SortStepModel(currentTurn,currentConnectionIdThisTurn)
         private GeneralFunctions GeneralFunctions = new GeneralFunctions();
 
@@ -96,17 +96,18 @@ namespace SeaBattle
 
         public override  Task OnDisconnectedAsync(Exception exception)//IF One user out at group delete all members of group!
         {
-            string groupname = userRepo.FirstOrDefault(p => p.Key == Context.ConnectionId).Key;//take user groupname(connectionId)
-            foreach (var item in userRepo.Where(p=>p.Key==groupname && p.Value.connectionId!=Context.ConnectionId))//disconnect all members in group
+            string groupname = userRepo.FirstOrDefault(p => p.Key == Context.ConnectionId).Value.connectionId;//take user groupname(connectionId)
+            string anotheruserId = userRepo.FirstOrDefault(p => p.Value.connectionId == groupname && p.Key != Context.ConnectionId).Key;//Take another ClientId      
+            foreach (var item in userRepo.Where(p => p.Value.connectionId == groupname))//disconnect all members in group
             {
-                 Groups.RemoveFromGroupAsync(item.Value.connectionId, groupname);
-                
+                Groups.RemoveFromGroupAsync(item.Key, groupname);
+                Clients.Client(item.Key).SendAsync("Disconnect");
             }
-            var anotheruserId = userRepo.FirstOrDefault(p => p.Key == groupname && p.Value.connectionId != Context.ConnectionId).Value.connectionId;
-            if (anotheruserId == null) userRepo.Remove(anotheruserId);
-            userRepo.Remove(Context.ConnectionId);
-           
+            if (anotheruserId != null) userRepo.Remove(anotheruserId);
+            userRepo.Remove(Context.ConnectionId);    
             userGroupRepo.Remove(groupname);
+
+          
             return base.OnDisconnectedAsync(exception);
         }
 
