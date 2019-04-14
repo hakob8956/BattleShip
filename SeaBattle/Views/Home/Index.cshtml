@@ -23,14 +23,15 @@
             <img src="~/img/welcome.png" class="welcome-image" />
             <br />
             <input type="text" readonly id="connectionIDtxt" class="form-control" onclick="this.select();" /><br />
+            <input type="radio" name="setting" value="random" checked> Random
+            <input type="radio" name="setting" value="setup">Position your ships<br>
             <input type="button" value="Play" id="connectBtn" class="btn" />
         </div>
-        <div class="row none" id="maincontainer">
-            <div class="col-lg-5 battlefield battlefield__self battlefield__wait">
-                <div class="battlefield-gap">
-                    <table class="battlefield-table" style="margin-left:105px;float:left">
+        <div class="row " id="maincontainer">
+            <div class="col-lg-5 battlefield battlefield__self ">
+                <div class="battlefield-gap none">
+                    <table class="battlefield-table " style="float:left">
                         <tbody>
-
                             <tr>
                                 <td></td>
                                 @for (int i = 0; i < 10; i++)//1-10
@@ -40,7 +41,6 @@
                             </tr>
                             @for (int i = 0; i < GameCore.Field.Size; i++)
                             {
-
                                 <tr class="battlefield-row">
                                     <td>@Convert.ToInt32(i + 1)</td>
                                     @for (int j = 0; j < GameCore.Field.Size; j++)
@@ -58,12 +58,11 @@
                 </div>
 
 
-
-                @*<div class="port" style="margin-left:90px">
+                <div class="port none">
 
 
                     <div class="port-instruction">
-                        Перетащите на поле и кликните, чтобы повернуть:
+                        Drag the ships to the grid, and then click to rotate:
                     </div>
 
 
@@ -73,7 +72,7 @@
 
                             <div class="port-ship" style="width: 8em; height: 2em; padding-right: 3px; padding-bottom: 0px;">
 
-                                <div data-id="L73iBCHFCvXp" data-length="4" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 8em; height: 2em; padding-right: 3px; padding-bottom: 0px;">
+                                <div data-id="NuyecnTgbyWS" data-length="4" data-position="h" class="ship-box" style="width: 8em; height: 2em; padding-right: 3px; padding-bottom: 0px;">
                                 </div>
                             </div>
                         </div>
@@ -82,13 +81,13 @@
 
                             <div class="port-ship" style="width: 6em; height: 2em; padding-right: 2px; padding-bottom: 0px;">
 
-                                <div data-id="JjAlE0g5lmNp" data-length="3" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 6em; height: 2em; padding-right: 2px; padding-bottom: 0px;">
+                                <div data-id="DQacxdk8S306" data-length="3" data-position="h" class="ship-box" style="width: 6em; height: 2em; padding-right: 2px; padding-bottom: 0px;">
                                 </div>
                             </div>
 
                             <div class="port-ship" style="width: 6em; height: 2em; padding-right: 2px; padding-bottom: 0px;">
 
-                                <div data-id="sLAQBIVM2atk" data-length="3" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 6em; height: 2em; padding-right: 2px; padding-bottom: 0px;">
+                                <div data-id="vuYhdOOlu8Ha" data-length="3" data-position="h" class="ship-box" style="width: 6em; height: 2em; padding-right: 2px; padding-bottom: 0px;">
                                 </div>
                             </div>
                         </div>
@@ -97,19 +96,19 @@
 
                             <div class="port-ship" style="width: 4em; height: 2em; padding-right: 1px; padding-bottom: 0px;">
 
-                                <div data-id="4szl5bkBBuVg" data-length="2" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 4em; height: 2em; padding-right: 1px; padding-bottom: 0px;">
+                                <div data-id="3pQnwGHLD2i7" data-length="2" data-position="h" class="ship-box" style="width: 4em; height: 2em; padding-right: 1px; padding-bottom: 0px;">
                                 </div>
                             </div>
 
                             <div class="port-ship" style="width: 4em; height: 2em; padding-right: 1px; padding-bottom: 0px;">
 
-                                <div data-id="zK96LJtAFJrg" data-length="2" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 4em; height: 2em; padding-right: 1px; padding-bottom: 0px;">
+                                <div data-id="kTLMUvG3kEAD" data-length="2" data-position="h" class="ship-box" style="width: 4em; height: 2em; padding-right: 1px; padding-bottom: 0px;">
                                 </div>
                             </div>
 
                             <div class="port-ship" style="width: 4em; height: 2em; padding-right: 1px; padding-bottom: 0px;">
 
-                                <div data-id="eXqSUbCo7r6k" data-length="2" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 4em; height: 2em; padding-right: 1px; padding-bottom: 0px;">
+                                <div data-id="FQjaOjjCnzzy" data-length="2" data-position="h" class="ship-box" style="width: 4em; height: 2em; padding-right: 1px; padding-bottom: 0px;">
                                 </div>
                             </div>
                         </div>
@@ -118,34 +117,141 @@
 
                             <div class="port-ship" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
 
-                                <div data-id="QpLVoIYmoYEu" data-length="1" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
+                                <div data-id="vN70k8K7tMLp" data-length="1" data-position="h" class="ship-box" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
                                 </div>
                             </div>
 
                             <div class="port-ship" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
 
-                                <div data-id="pTZT3tDOOyMo" data-length="1" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
+                                <div data-id="YnOWtWkwJ8Fg" data-length="1" data-position="h" class="ship-box" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
                                 </div>
                             </div>
 
                             <div class="port-ship" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
 
-                                <div data-id="KqNebfDYepNY" data-length="1" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
+                                <div data-id="D8FHSpNgdP7N" data-length="1" data-position="h" class="ship-box" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
                                 </div>
                             </div>
 
                             <div class="port-ship" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
 
-                                <div data-id="igt39meeM2K6" data-length="1" data-position="h" class="ship-box ship-box__h ui-draggable ship-box__draggable" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
+                                <div data-id="aIBApsKeZPdE" data-length="1" data-position="h" class="ship-box" style="width: 2em; height: 2em; padding-right: 0px; padding-bottom: 0px;">
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                </div>*@
+                </div>
+                <div class="battlefield-stat none">
+
+                    <div class="ship-types">
+
+                        <div class="ship-type ship-type__len_4">
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+                        </div>
+
+                        <div class="ship-type ship-type__len_3">
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+                        </div>
+
+                        <div class="ship-type ship-type__len_2">
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+                        </div>
+
+                        <div class="ship-type ship-type__len_1">
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+
+                            <span class="ship">
+
+                                <span class="ship-part">
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-5 battlefield battlefield__rival battlefield__wait" id="enemy">
-                <div class="battlefield-gap">
+                <div class="battlefield-gap none">
                     <table class="battlefield-table" style="margin-right:105px;float:right">
                         <tbody>
                             <tr>
@@ -290,42 +396,41 @@
         <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 
         <script src="~/lib/signalr/signalr.min.js"></script>
-        <script src="~/js/Hub.js"></script> <!--Connect hub (SIGNALR Core....)-->
+
         <script src="~/js/site.js"></script><!-- Connect site.js (functions)-->
-
         <script>
-
-            var _connectionId;
+       var _connectionId;
             window.onload = function () {
-            @if (Model != null) {
-                <text>
+            @if (Model != null)
+            {
+<text>
                    _connectionId = @Model;
                  </text>
             }
-            else {
-                <text>
+            else
+            {
+<text>
                     _connectionId = getRandomConnectionID();
                 </text>
             }
 
+            
             let textBox = $("#connectionIDtxt");
             textBox.attr("value", changeurl(_connectionId));
             textBox.attr("data-value", _connectionId);
             }
 
-            $(function () {
-                $(".ship-box").draggable();
-                $(".battlefield-table").droppable({
-                    drop: function (event, ui) {
-                        $(this)
-                            .addClass("ui-state-highlight")
-                            .find("p")
-                            .html("Dropped!");
-                    }
-                });
-            });
+            var canSet = false;
+            var x = -1, y = -1, oldId;
+                var Ox = {};
+                var Oy = {};
+
+
 
 
         </script>
+
+
+        <script src="~/js/Hub.js"></script> <!--Connect hub (SIGNALR Core....)-->
 </body>
 </html>

@@ -80,20 +80,7 @@ namespace GameCore
                 }
             }
         }
-        public int CountAllShips()
-        {
-            int count = 0;
-            for (int i = 0; i < Size; i++)
-            {
-                for (int j = 0; j < Size; j++)
-                {
-                    if (plans[i, j] == (int)FieldType.Used)
-                        count++;
-                }
-            }
-            return count;
-
-        }
+        
         public static bool CheckLocation(int x, int y)
         {
             if (!(x >= 0 && y >= 0 && x < Size && y < Size))
@@ -136,7 +123,6 @@ namespace GameCore
                 return true;
             }
             return false;
-
         }
         public TestPoint[] TestSetShipDir(int shipType, int XD, int YD, int x, int y)
         {
@@ -166,7 +152,10 @@ namespace GameCore
                 {
                     if (CheckLocation(arround.xx[i], arround.yy[i]))
                     {
-                        if (plans[arround.xx[i], arround.yy[i]] != (int)FieldType.Empty) return false;
+                        if (plans[arround.xx[i], arround.yy[i]] != (int)FieldType.Empty)
+                        {
+                            return false;
+                        }
                     }
                 }
                 return true;

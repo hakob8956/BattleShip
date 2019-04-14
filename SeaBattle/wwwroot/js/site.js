@@ -3,12 +3,19 @@
         $(".welcome").addClass("none");
         $("#maincontainer").removeClass("none");
         $(".battlefield-stat").removeClass("none");
-        $(".battlefield__rival").removeClass("battlefield__wait").addClass(".battlefield__start");
+        $(".battlefield__rival").removeClass("battlefield__wait").addClass(".battlefield__start").removeClass("none");
+        $(".battlefield-gap").removeClass("none");
+        $(".battlefield__self .battlefield-gap").css({ "margin-left": "100px" });
         $(".notification").removeClass("none");
+        $(".battlefield__self .battlefield-gap").removeClass("battlefield__preparing").removeClass("none");
+        $(".port").addClass("none");
+        $(".ship-box").remove();
     } else {
         $(".welcome").removeClass("none");
         $("#maincontainer").addClass("none");
         $(".battlefield-stat").addClass("none");
+        $(".battlefield-gap").addClass("none");
+        $(".battlefield__self .battlefield-gap").css({ "margin-left": "0px" });
         $(".battlefield__rival").addClass("battlefield__wait").removeClass(".battlefield__start");
         $(".notification").addClass("none");
     }

@@ -245,10 +245,11 @@ table {
 
 .port {
     width: 350px;
-    margin-left: 2em;
+    margin-left: 30px;
     position: absolute !important;
     top: 0;
-    left: 0
+    left: 0;
+    border:1px solid black;
 }
 
 .port-instruction {
@@ -304,8 +305,23 @@ ship-box {
 .ship-box__transparent {
     visibility: hidden
 }
-
+.ship-box {
+    z-index: 2;
+    left: 0;
+    top: 0;
+    border: 2px solid #00f;
+    background: rgba(0,0,255,.05);
+    position: absolute !important;
+}
 .battlefield-table-placeholder {
     min-height: 340px;
     min-width: 340px
+}
+
+.battlefield__preparing{
+    margin-left:30em;
+
+}
+.special{
+    border:1px solid green;
 }

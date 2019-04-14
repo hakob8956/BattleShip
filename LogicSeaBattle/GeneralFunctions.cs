@@ -23,7 +23,20 @@ namespace GameCore
             }
             return value;
         }
+        public int CountAllShips(int [,] field)
+        {
+            int count = 0;
+            for (int i = 0; i < Field.Size; i++)
+            {
+                for (int j = 0; j < Field.Size; j++)
+                {
+                    if (field[i, j] == (int)FieldType.Used)
+                        count++;
+                }
+            }
+            return count;
 
+        }
         public (int[,], int) Shoot(int[,] field, int x, int y)//return fieldType
         {
             int countKill = 0;
@@ -37,9 +50,7 @@ namespace GameCore
                 field[y, x] = value;
                 if (value == (int)FieldType.Shooted)
                 {
-
                     int statusShip = 1;
-
                     for (int i = 0; i < 8; i++)
                     {
                         if (Field.CheckLocation(arround.xx[i], arround.yy[i]))
@@ -57,14 +68,12 @@ namespace GameCore
                             }
                         }
                     }
-
                     if (statusShip == 3)
                     {
                         XD = x - dirX;
                         YD = y - dirY;
                         statusShip = CheckHurtShip(field, x, y, XD, YD) ? 2 : 3;
                     }
-
                     if (statusShip == 1)//OnDecker
                     {
                         countKill = 1;
@@ -130,7 +139,6 @@ namespace GameCore
                             x1 += XD;
                             y1 += YD;
                         }
-
                     }
                 }
 
@@ -138,6 +146,36 @@ namespace GameCore
             return (field, countKill);
         }
 
+        public int[,] DeleteShip(int[,] field, int x, int y)
+        {
+            int dirX = 0;
+            int dirY = 0;
+            int XD = 0;
+            int YD = 0;
+            //field[y, x] = (int)FieldType.Empty;
+            Field.ArroundCords arround = new Field.ArroundCords(x, y);
+            for (int i = 0; i < 8; i++)
+            {
+                if (Field.CheckLocation(arround.xx[i],arround.yy[i]) &&  field[arround.yy[i],arround.xx[i]] == (int)FieldType.Used)
+                {
+
+
+                    dirX = arround.xx[i];
+                    dirY = arround.yy[i];
+                    break;
+                }
+            }
+            XD = x - dirX;
+            YD = y - dirY;
+            while (Field.CheckLocation(x, y) && field[y, x] == (int)FieldType.Used)
+            {
+                field[y, x] = (int)FieldType.Empty;
+                x -= XD;
+                y -= YD;
+            }
+            return field;
+
+        }
         public bool CheckHurtShip(int[,] field, int x, int y, int XD, int YD)
         {
             while (Field.CheckLocation(x, y) && field[y, x] == (int)FieldType.Shooted)
